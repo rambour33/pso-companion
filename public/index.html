@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PSO Companion · Skills</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="/theme.css">
+<style>
+.hero{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:24px;align-items:end}
+@media (max-width:760px){.hero{grid-template-columns:minmax(0,1fr)}}
+.addr{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 16px;font-size:.88rem;min-width:260px}
+.addr .lbl{font-family:var(--display);text-transform:uppercase;letter-spacing:.1em;font-size:.8rem;color:var(--ink-2);font-weight:600}
+.addr a{font-family:var(--mono);display:block;margin-top:3px}
+.addr .live{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--pvw);margin-right:6px;vertical-align:1px}
+
+.skill{background:var(--surface);border:1px solid var(--line);border-radius:12px;display:grid;grid-template-columns:minmax(0,1fr);overflow:hidden}
+.skill-top{padding:18px 20px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px;align-items:start}
+@media (max-width:640px){.skill-top{grid-template-columns:minmax(0,1fr)}}
+.skill h3{margin:0;font-size:1.6rem;text-transform:none;letter-spacing:.01em}
+.skill .desc{margin:.3em 0 .6em;color:var(--ink-2);max-width:78ch}
+.meta{display:flex;flex-wrap:wrap;gap:8px;font-family:var(--mono);font-size:.76rem;color:var(--ink-2)}
+.meta span{border:1px solid var(--line);border-radius:999px;padding:2px 9px}
+.actions{display:flex;flex-wrap:wrap;gap:8px}
+.btn{font:600 .92rem var(--body);border-radius:8px;padding:8px 14px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.install{border-top:1px solid var(--line);background:var(--surface-2);padding:14px 20px}
+.install .lbl{font-family:var(--display);text-transform:uppercase;letter-spacing:.08em;font-size:.85rem;font-weight:600;color:var(--ink-2);margin-bottom:6px}
+
+.viewer{border-top:1px solid var(--line);display:grid;grid-template-columns:230px minmax(0,1fr);min-height:320px}
+@media (max-width:760px){.viewer{grid-template-columns:minmax(0,1fr)}}
+.files{border-right:1px solid var(--line);padding:10px 0;display:grid;align-content:start;gap:1px;background:var(--surface-2)}
+@media (max-width:760px){.files{border-right:0;border-bottom:1px solid var(--line)}}
+.files button{all:unset;cursor:pointer;padding:6px 16px;font-family:var(--mono);font-size:.8rem;color:var(--ink-2);display:flex;justify-content:space-between;gap:10px}
+.files button:hover{color:var(--ink);background:var(--surface)}
+.files button[aria-current="true"]{color:var(--ink);background:var(--surface);box-shadow:inset 3px 0 0 var(--accent)}
+.files button:focus-visible{outline:3px solid var(--accent);outline-offset:-3px}
+.files small{opacity:.7}
+.content{padding:18px 24px;min-width:0}
+.content .path{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-family:var(--mono);font-size:.78rem;color:var(--ink-2);margin-bottom:12px}
+.md h1,.md h2{font-size:1.6rem;text-transform:uppercase;margin:1em 0 .4em}
+.md h1:first-child,.md h2:first-child{margin-top:0}
+.md h3{font-size:1.2rem;margin:1.4em 0 .4em}
+.md table{border-collapse:collapse;display:block;overflow-x:auto;font-size:.88rem;margin:10px 0}
+.md th,.md td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}
+.md th{background:var(--surface-2)}
+.md pre{margin:10px 0}
+.md pre code{background:none;padding:0}
+
+.exports{display:grid;gap:8px}
+.export{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 16px}
+.export .n{font-family:var(--mono);font-size:.88rem;overflow-wrap:anywhere}
+.export small{color:var(--ink-2);font-family:var(--mono);font-size:.75rem}
+.empty-state{color:var(--ink-2);font-style:italic}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <a class="brand" href="/">PSO Companion</a>
+    <nav><a href="/" aria-current="page">Skills</a><a href="/docs">Documentation</a></nav>
+  </header>
+
+  <section class="hero">
+    <div>
+      <div class="eyebrow">Serveur local · lecture seule</div>
+      <h1>Skills de la régie</h1>
+      <p class="lead">Télécharge les skills Claude Code, lis leurs fichiers et récupère les exports Companion prêts à importer. Accessible depuis n'importe quel PC du réseau.</p>
+    </div>
+    <div class="addr" id="addr"><div class="lbl"><span class="live"></span>Adresses de ce serveur</div></div>
+  </section>
+
+  <section>
+    <h2>Skills</h2>
+    <div id="skills" style="display:grid;gap:18px"><p class="empty-state">Chargement…</p></div>
+  </section>
+
+  <section>
+    <h2>Exports Companion</h2>
+    <p>Fichiers <code>.companionconfig</code> du dossier <span class="mono" id="exports-dir"></span>. À importer dans Companion (onglet Import / Export).</p>
+    <div class="exports" id="exports"><p class="empty-state">Chargement…</p></div>
+  </section>
+
+  <section>
+    <h2>Installer un skill</h2>
+    <ol class="plain">
+      <li>Télécharge le <b>.zip</b> du skill ci-dessus.</li>
+      <li>Décompresse-le dans le dossier <code>.claude\skills</code> du projet (ex. <code>P:\PSO 2\.claude\skills</code>). Le zip contient déjà le dossier du skill : on obtient <code>.claude\skills\companion\SKILL.md</code>.</li>
+      <li>Dans Claude Code ouvert sur ce projet, tape <code>/companion</code> (ou le nom du skill) pour vérifier qu'il se charge.</li>
+    </ol>
+    <p>Pour l'installer pour <b>tous</b> tes projets, décompresse-le plutôt dans <code>%USERPROFILE%\.claude\skills</code>.</p>
+  </section>
+
+  <footer>pso-companion · <a href="https://github.com/rambour33/pso-companion">github.com/rambour33/pso-companion</a></footer>
+</div>
+
+<script>
+const fmtSize = n => n < 1024 ? n + ' o' : n < 1048576 ? (n / 1024).toFixed(1) + ' Ko' : (n / 1048576).toFixed(1) + ' Mo';
+const fmtDate = t => new Date(t).toLocaleString('fr-FR', { dateStyle: 'short', timeStyle: 'short' });
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+let baseUrl = location.origin;
+
+function copyBlock(text) {
+  return `<div class="code"><pre>${esc(text)}</pre><button class="copy" type="button">Copier</button></div>`;
+}
+document.addEventListener('click', async e => {
+  const btn = e.target.closest('.copy');
+  if (!btn) return;
+  const pre = btn.previousElementSibling;
+  try { await navigator.clipboard.writeText(pre.textContent); btn.textContent = 'Copié'; }
+  catch { const r = document.createRange(); r.selectNodeContents(pre); getSelection().removeAllRanges(); getSelection().addRange(r); btn.textContent = 'Sélectionné'; }
+  setTimeout(() => (btn.textContent = 'Copier'), 1600);
+});
+
+async function loadInfo() {
+  const info = await fetch('/api/info').then(r => r.json());
+  const urls = [`http://localhost:${info.port}/`, ...info.ips.map(ip => `http://${ip}:${info.port}/`)];
+  // Pour les commandes d'installation, on préfère l'IP réseau : elle marche aussi depuis les autres PC.
+  if (info.ips.length && ['localhost', '127.0.0.1'].includes(location.hostname)) baseUrl = `http://${info.ips[0]}:${info.port}`;
+  document.getElementById('addr').insertAdjacentHTML('beforeend', urls.map(u => `<a href="${u}">${u}</a>`).join(''));
+  document.getElementById('exports-dir').textContent = info.exportsDir || '(non configuré)';
+}
+
+async function openFile(skill, file, container, btn) {
+  container.querySelectorAll('.files button').forEach(b => b.setAttribute('aria-current', b === btn ? 'true' : 'false'));
+  const out = container.querySelector('.content');
+  out.innerHTML = '<p class="empty-state">Chargement…</p>';
+  const data = await fetch(`/api/skills/${encodeURIComponent(skill.id)}/file?path=${encodeURIComponent(file.path)}`).then(r => r.json());
+  const dl = `/download/skills/${encodeURIComponent(skill.id)}/file?path=${encodeURIComponent(file.path)}`;
+  const head = `<div class="path"><span>${esc(skill.id)}/${esc(file.path)}</span><a href="${dl}">Télécharger ce fichier</a></div>`;
+  if (data.error) out.innerHTML = head + `<p>${esc(data.error)}</p>`;
+  else if (data.type === 'markdown') out.innerHTML = head + `<div class="md">${data.html}</div>`;
+  else out.innerHTML = head + `<pre>${esc(data.text)}</pre>`;
+}
+
+function renderSkill(s) {
+  const zip = `/download/skills/${encodeURIComponent(s.id)}.zip`;
+  const ps = `Invoke-WebRequest ${baseUrl}${zip} -OutFile "$env:TEMP\\${s.id}.zip"\nExpand-Archive "$env:TEMP\\${s.id}.zip" -DestinationPath "P:\\PSO 2\\.claude\\skills" -Force`;
+  const el = document.createElement('article');
+  el.className = 'skill';
+  el.innerHTML = `
+    <div class="skill-top">
+      <div>
+        <h3>${esc(s.name)}</h3>
+        <p class="desc">${esc(s.description)}</p>
+        <div class="meta"><span>${s.files.length} fichiers</span><span>${fmtSize(s.size)}</span><span>modifié le ${fmtDate(s.updated)}</span></div>
+      </div>
+      <div class="actions">
+        <a class="btn primary" href="${zip}">Télécharger .zip</a>
+        <button class="btn" type="button" data-toggle aria-expanded="false">Lire les fichiers</button>
+      </div>
+    </div>
+    <div class="install"><div class="lbl">Installation en une commande (PowerShell, depuis n'importe quel PC du réseau)</div>${copyBlock(ps)}</div>
+    <div class="viewer" hidden>
+      <div class="files">${s.files.map((f, i) => `<button type="button" data-i="${i}"><span>${esc(f.path)}</span><small>${fmtSize(f.size)}</small></button>`).join('')}</div>
+      <div class="content"></div>
+    </div>`;
+  const viewer = el.querySelector('.viewer');
+  const toggle = el.querySelector('[data-toggle]');
+  toggle.addEventListener('click', () => {
+    viewer.hidden = !viewer.hidden;
+    toggle.setAttribute('aria-expanded', String(!viewer.hidden));
+    toggle.textContent = viewer.hidden ? 'Lire les fichiers' : 'Fermer';
+    if (!viewer.hidden && !viewer.querySelector('[aria-current="true"]')) {
+      const i = Math.max(0, s.files.findIndex(f => f.path === 'SKILL.md'));
+      openFile(s, s.files[i], viewer, viewer.querySelector(`[data-i="${i}"]`));
+    }
+  });
+  viewer.querySelectorAll('.files button').forEach(b => b.addEventListener('click', () => openFile(s, s.files[b.dataset.i], viewer, b)));
+  return el;
+}
+
+async function loadSkills() {
+  const skills = await fetch('/api/skills').then(r => r.json());
+  const box = document.getElementById('skills');
+  box.innerHTML = '';
+  if (!skills.length) box.innerHTML = '<p class="empty-state">Aucun skill dans le dossier skills/.</p>';
+  skills.forEach(s => box.appendChild(renderSkill(s)));
+}
+
+async function loadExports() {
+  const list = await fetch('/api/exports').then(r => r.json());
+  const box = document.getElementById('exports');
+  box.innerHTML = list.length ? '' : '<p class="empty-state">Aucun export trouvé.</p>';
+  list.forEach(f => box.insertAdjacentHTML('beforeend', `
+    <div class="export"><div><div class="n">${esc(f.name)}</div><small>${fmtSize(f.size)} · ${fmtDate(f.mtime)}</small></div>
+    <a class="btn" href="/download/exports/${encodeURIComponent(f.name)}">Télécharger</a></div>`));
+}
+
+loadInfo().then(loadSkills).catch(err => {
+  document.getElementById('skills').innerHTML = `<p>Impossible de joindre le serveur : ${esc(err.message)}</p>`;
+});
+loadExports();
+</script>
+</body>
+</html>

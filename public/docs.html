@@ -1,0 +1,699 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PSO Companion · Documentation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="/theme.css">
+<style>
+:root{
+  --bg:#f3f5f7; --surface:#ffffff; --surface-2:#e9edf1; --ink:#14191f; --ink-2:#4a5561; --line:#d3dae1;
+  --accent:#0b6f78; --accent-ink:#ffffff; --accent-soft:#d9eeef;
+  --pvw:#1c9a3e; --pgm:#cf2b2b; --warn:#9a6a00; --warn-soft:#fbf1d6; --code-bg:#e8ecf0;
+  --deck:#15181c; --deck-edge:#2a2f36;
+  --display:"Barlow Condensed","Arial Narrow","Roboto Condensed",sans-serif;
+  --body:"IBM Plex Sans","Segoe UI",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",Consolas,"Courier New",monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0f1316; --surface:#161b20; --surface-2:#1d242a; --ink:#e6ebef; --ink-2:#a3afba; --line:#2b343c;
+    --accent:#4fc1c9; --accent-ink:#06282b; --accent-soft:#12383b;
+    --pvw:#3ccf66; --pgm:#ff5b5b; --warn:#e8b64a; --warn-soft:#2e2612; --code-bg:#1f272e;
+    --deck:#0a0c0e; --deck-edge:#262c33;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0f1316; --surface:#161b20; --surface-2:#1d242a; --ink:#e6ebef; --ink-2:#a3afba; --line:#2b343c;
+  --accent:#4fc1c9; --accent-ink:#06282b; --accent-soft:#12383b;
+  --pvw:#3ccf66; --pgm:#ff5b5b; --warn:#e8b64a; --warn-soft:#2e2612; --code-bg:#1f272e;
+  --deck:#0a0c0e; --deck-edge:#262c33;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.6;padding-inline:20px;padding-block:0 64px}
+a{color:var(--accent)}
+code,kbd,.mono{font-family:var(--mono);font-size:.88em}
+:not(pre)>code{background:var(--code-bg);padding:.1em .35em;border-radius:4px;overflow-wrap:anywhere}
+h1,h2,h3{font-family:var(--display);font-weight:700;line-height:1.1;text-wrap:balance;letter-spacing:.01em}
+h2{font-size:2rem;margin:0 0 .4em;text-transform:uppercase}
+h3{font-size:1.3rem;margin:1.6em 0 .4em;text-transform:uppercase;letter-spacing:.03em}
+p,li{max-width:68ch}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+
+.shell{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:230px minmax(0,1fr);gap:48px}
+@media (max-width:900px){.shell{grid-template-columns:minmax(0,1fr);gap:0}}
+
+/* Header */
+.masthead{max-width:1180px;margin:0 auto;padding-block:40px 28px;border-bottom:1px solid var(--line);margin-bottom:36px;display:grid;gap:14px}
+.eyebrow{font-family:var(--display);font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-size:.95rem}
+.masthead h1{font-size:clamp(2.6rem,6vw,4.2rem);margin:0;text-transform:uppercase}
+.masthead p{margin:0;color:var(--ink-2);font-size:1.08rem}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.chip{font-family:var(--mono);font-size:.78rem;border:1px solid var(--line);background:var(--surface);padding:3px 9px;border-radius:999px;color:var(--ink-2)}
+.tally-dot{display:inline-block;width:.6em;height:.6em;border-radius:50%;margin-right:.35em;vertical-align:.05em}
+
+/* Nav */
+nav.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 20px);align-self:start;display:grid;gap:2px;font-size:.93rem}
+nav.toc .toc-title{font-family:var(--display);text-transform:uppercase;letter-spacing:.12em;color:var(--ink-2);font-weight:600;margin-bottom:8px}
+nav.toc a{color:var(--ink-2);text-decoration:none;padding:5px 10px;border-left:2px solid var(--line)}
+nav.toc a:hover{color:var(--ink);border-left-color:var(--accent)}
+@media (max-width:900px){nav.toc{position:static;display:flex;flex-wrap:wrap;gap:6px;margin-bottom:28px}nav.toc .toc-title{width:100%}nav.toc a{border:1px solid var(--line);border-radius:999px;padding:3px 12px;background:var(--surface)}}
+
+main{min-width:0;display:grid;gap:64px}
+section{scroll-margin-top:20px}
+.lead{font-size:1.08rem;color:var(--ink-2)}
+
+/* Flow diagram */
+.flow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;align-items:stretch;margin-top:20px}
+.flow .node{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.flow .node b{font-family:var(--display);text-transform:uppercase;letter-spacing:.04em;font-size:1.15rem;display:block}
+.flow .node small{color:var(--ink-2);display:block;line-height:1.4;margin-top:4px}
+.flow .hub{grid-row:span 2;display:flex;flex-direction:column;justify-content:center;border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.flow .src{grid-row:span 2;display:flex;flex-direction:column;justify-content:center}
+.flow .link{font-family:var(--mono);font-size:.74rem;color:var(--accent);margin-top:6px;display:block}
+@media (max-width:640px){.flow{grid-template-columns:minmax(0,1fr)}.flow .hub,.flow .src{grid-row:auto}}
+
+/* Tables */
+.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.93rem}
+th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--display);text-transform:uppercase;letter-spacing:.06em;font-weight:600;font-size:.95rem;background:var(--surface-2)}
+tr:last-child td{border-bottom:0}
+td code{white-space:nowrap}
+
+/* Steps */
+.progress{display:flex;align-items:center;gap:12px;margin:10px 0 18px;font-family:var(--mono);font-size:.85rem;color:var(--ink-2)}
+.bar{flex:1;height:6px;background:var(--surface-2);border-radius:99px;overflow:hidden;max-width:360px}
+.bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .25s}
+ol.steps{list-style:none;padding:0;margin:0;display:grid;gap:14px;counter-reset:step}
+ol.steps>li{max-width:none;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px 20px 18px 20px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 16px;counter-increment:step}
+ol.steps>li.done{border-color:var(--pvw)}
+.step-num{font-family:var(--display);font-weight:700;font-size:2rem;line-height:1;color:var(--accent);grid-row:span 3;min-width:1.4em}
+.step-num::before{content:counter(step,decimal-leading-zero)}
+li.done .step-num{color:var(--pvw)}
+.step-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.step-head h3{margin:0;font-size:1.25rem}
+.check{display:inline-flex;align-items:center;gap:8px;font-size:.85rem;color:var(--ink-2);cursor:pointer;user-select:none;white-space:nowrap}
+.check input{width:18px;height:18px;accent-color:var(--pvw)}
+.step-body{min-width:0}
+.step-body p,.step-body li{max-width:64ch}
+.step-body ul{padding-left:1.2em;margin:.4em 0}
+.who{font-family:var(--mono);font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-2)}
+
+/* Code */
+.code{position:relative;margin:10px 0}
+pre{margin:0;background:var(--code-bg);border:1px solid var(--line);border-radius:8px;padding:12px 14px;padding-right:74px;overflow-x:auto;font-family:var(--mono);font-size:.82rem;line-height:1.55;color:var(--ink)}
+.copy{position:absolute;top:8px;right:8px;font:500 .75rem var(--mono);background:var(--surface);color:var(--ink-2);border:1px solid var(--line);border-radius:6px;padding:3px 8px;cursor:pointer}
+.copy:hover{color:var(--ink);border-color:var(--accent)}
+
+/* Notes */
+.note{border-left:3px solid var(--accent);background:var(--accent-soft);padding:10px 14px;border-radius:0 8px 8px 0;margin:12px 0;max-width:72ch}
+.note.warn{border-left-color:var(--warn);background:var(--warn-soft)}
+.note b{font-weight:600}
+
+/* Deck */
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0}
+.tab{font-family:var(--display);font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:1rem;border:1px solid var(--line);background:var(--surface);color:var(--ink-2);padding:6px 14px;border-radius:8px;cursor:pointer}
+.tab[aria-selected="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.deck-area{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:20px;align-items:start}
+@media (max-width:1100px){.deck-area{grid-template-columns:minmax(0,1fr)}}
+.deck-scroll{overflow-x:auto;padding-bottom:4px}
+.deck{background:var(--deck);border:1px solid var(--deck-edge);border-radius:18px;padding:18px;display:grid;grid-template-columns:repeat(8,68px);gap:10px;width:max-content;box-shadow:0 10px 30px rgba(0,0,0,.18)}
+.key{width:68px;height:68px;border-radius:9px;border:1px solid #000;display:flex;align-items:center;justify-content:center;text-align:center;font:600 11px/1.15 var(--body);color:#fff;padding:4px;white-space:pre-line;cursor:pointer;position:relative;overflow:hidden;word-break:break-word}
+.key.empty{background:#1b1f24;cursor:default;border-color:#111}
+.key.nav{font-size:22px}
+.key:hover:not(.empty){filter:brightness(1.18)}
+.key[aria-pressed="true"]{outline:3px solid #fff;outline-offset:2px}
+.key .fbmark{position:absolute;top:4px;right:4px;width:7px;height:7px;border-radius:50%;background:#fff;opacity:.8}
+.key .seq{position:absolute;bottom:3px;left:4px;font:500 8px var(--mono);opacity:.75}
+.deck-legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:10px;font-size:.82rem;color:var(--ink-2)}
+.deck-legend span{display:inline-flex;align-items:center;gap:6px}
+.detail{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 20px)}
+@media (max-width:1100px){.detail{position:static}}
+.detail .loc{font-family:var(--mono);font-size:.78rem;color:var(--ink-2)}
+.detail h4{font-family:var(--display);text-transform:uppercase;font-size:1.4rem;margin:.1em 0 .4em;white-space:pre-line;line-height:1.05}
+.detail ol,.detail ul{padding-left:1.2em;margin:.3em 0;font-size:.9rem}
+.detail li{margin:.2em 0}
+.detail .lbl{font-family:var(--display);text-transform:uppercase;letter-spacing:.08em;font-size:.85rem;color:var(--ink-2);margin-top:12px;font-weight:600}
+.tag{font:500 .7rem var(--mono);padding:1px 6px;border-radius:4px;border:1px solid var(--line);margin-right:4px;white-space:nowrap}
+.tag.vmix{color:var(--accent);border-color:var(--accent)}
+.tag.pso{color:var(--warn);border-color:var(--warn)}
+
+/* Concept cards */
+.concepts{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;margin-top:16px}
+.concept{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.concept h3{margin:0 0 6px;font-size:1.15rem}
+.concept p{margin:0;font-size:.93rem;color:var(--ink-2)}
+
+/* Prompts */
+.prompts{display:grid;gap:8px;margin:12px 0;padding:0;list-style:none}
+.prompts li{max-width:none;background:var(--surface);border:1px dashed var(--line);border-radius:8px;padding:9px 14px;font-style:italic}
+
+/* FAQ */
+details{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin-bottom:10px}
+details summary{cursor:pointer;font-weight:600}
+details p,details ul{margin:.6em 0 .2em;font-size:.95rem}
+
+dl.gloss{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:8px 20px;margin:12px 0}
+dl.gloss dt{font-family:var(--display);font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+dl.gloss dd{margin:0;color:var(--ink-2);max-width:60ch}
+@media (max-width:520px){dl.gloss{grid-template-columns:minmax(0,1fr)}dl.gloss dd{margin-bottom:8px}}
+
+footer{max-width:1180px;margin:64px auto 0;padding-top:20px;border-top:1px solid var(--line);color:var(--ink-2);font-size:.85rem}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+<style>.topbar{margin-bottom:0}</style>
+</head>
+<body>
+<header class="topbar"><a class="brand" href="/">PSO Companion</a><nav><a href="/">Skills</a><a href="/docs" aria-current="page">Documentation</a></nav></header>
+
+
+<header class="masthead">
+  <div class="eyebrow">Stream Deck XL · Companion 4.3 · vMix · overlay PSO</div>
+  <h1>Manuel régie PSO Companion</h1>
+  <p>Comment les touches du Stream Deck pilotent l'overlay PSO et vMix, ce que contient le dépôt <code>pso-companion</code>, et la mise en place pas à pas.</p>
+  <div class="chips">
+    <span class="chip">github.com/rambour33/pso-companion</span>
+    <span class="chip">module studiocoast-vmix v5.0.5</span>
+    <span class="chip">serveur PSO : localhost:3002</span>
+    <span class="chip">vMix TCP : 8099</span>
+    <span class="chip">serveur de skills : port 3010</span>
+  </div>
+</header>
+
+<div class="shell">
+  <nav class="toc" aria-label="Sommaire">
+    <div class="toc-title">Sommaire</div>
+    <a href="#principe">Le principe</a>
+    <a href="#fichiers">Les fichiers</a>
+    <a href="#serveur">Serveur de skills</a>
+    <a href="#tuto">Mise en place</a>
+    <a href="#pages">Les pages du deck</a>
+    <a href="#boutons">Types de boutons</a>
+    <a href="#claude">Créer des boutons</a>
+    <a href="#vmix">Référence vMix</a>
+    <a href="#depannage">Dépannage</a>
+    <a href="#glossaire">Glossaire</a>
+  </nav>
+
+  <main>
+    <!-- PRINCIPE -->
+    <section id="principe">
+      <h2>Le principe</h2>
+      <p class="lead">Le Stream Deck ne sait rien faire tout seul. Chaque touche est configurée dans <b>Companion</b>, qui envoie un ordre au bon logiciel au moment où tu appuies.</p>
+      <div class="flow" role="img" aria-label="Le Stream Deck est relié à Companion, qui envoie des requêtes HTTP au serveur PSO et des commandes TCP à vMix">
+        <div class="node src"><b>Stream Deck XL</b><small>32 touches (8 × 4). Une page = un jeu de 32 touches. ⬆️ ⬇️ changent de page.</small></div>
+        <div class="node hub"><b>Companion</b><small>Contient la config des touches (le fichier <code>.companionconfig</code>) et deux connexions : <code>http</code> et <code>vmix</code>.</small></div>
+        <div class="node"><b>Serveur PSO</b><small>Affiche / cache les overlays OBS, gère le score.</small><span class="link">HTTP GET → localhost:3002/api/deck/…</span></div>
+        <div class="node"><b>vMix</b><small>Preview, program, transitions, stingers, overlays, REC, stream, replay, audio.</small><span class="link">TCP → 127.0.0.1:8099</span></div>
+      </div>
+      <p>Companion peut aussi <b>lire l'état de vMix</b> : une touche peut s'allumer en vert quand son input est en preview, en rouge quand il est à l'antenne, en rouge quand l'enregistrement tourne. C'est ce qu'on appelle un <i>feedback</i>.</p>
+    </section>
+
+    <!-- FICHIERS -->
+    <section id="fichiers">
+      <h2>Les fichiers</h2>
+      <p>Tout est rangé à trois endroits. Le dépôt <code>P:\pso-companion</code> (aussi sur GitHub) est la version de référence, chaque skill y a son dossier dans <code>skills\</code> ; le dossier <code>.claude</code> est la copie que Claude utilise ; le dossier <code>PSO\companion</code> contient les fichiers qu'on importe dans Companion.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Fichier</th><th>Où</th><th>À quoi il sert</th></tr></thead>
+        <tbody>
+          <tr><td><code>SKILL.md</code></td><td><code>P:\pso-companion\skills\companion</code></td><td>Les instructions du skill : conventions des boutons PSO et vMix, méthode, format des specs. Claude le lit quand tu parles de Companion ou de Stream Deck.</td></tr>
+          <tr><td><code>VMIX.md</code></td><td><code>P:\pso-companion\skills\companion</code></td><td>La liste des actions et feedbacks vMix, avec leurs options, relevée dans le code du module officiel.</td></tr>
+          <tr><td><code>scripts/companion.py</code></td><td><code>P:\pso-companion\skills\companion</code></td><td>Le script qui lit (<code>dump</code>) et fabrique (<code>apply</code>) les boutons dans un fichier Companion.</td></tr>
+          <tr><td><code>examples/spec.json</code></td><td><code>P:\pso-companion\skills\companion</code></td><td>Exemple de page PSO : score, toggles d'overlay, bouton maître.</td></tr>
+          <tr><td><code>examples/vmix-spec.json</code></td><td><code>P:\pso-companion\skills\companion</code></td><td>La description des pages <b>vMix Régie</b> et <b>vMix Auto</b>. C'est le fichier à modifier pour changer ces pages.</td></tr>
+          <tr><td><code>README.md</code></td><td><code>P:\pso-companion</code></td><td>Résumé du dépôt et commandes.</td></tr>
+          <tr><td><code>server.js</code> · <code>start.bat</code></td><td><code>P:\pso-companion</code></td><td>Le serveur local de skills et de documentation (port 3010), et son lanceur.</td></tr>
+          <tr><td><code>public/</code></td><td><code>P:\pso-companion</code></td><td>Les pages du serveur : catalogue des skills et cette documentation.</td></tr>
+          <tr><td><code>config.json</code></td><td><code>P:\pso-companion</code></td><td>Port du serveur et dossier des exports Companion à proposer au téléchargement.</td></tr>
+          <tr><td>Copie du skill</td><td><code>P:\PSO 2\.claude\skills\companion</code></td><td>Même contenu que le dépôt. C'est ici que Claude Code va chercher le skill quand tu travailles dans <code>P:\PSO 2</code>.</td></tr>
+          <tr><td><code>PSO-Companion (19).companionconfig</code></td><td><code>P:\PSO 2\PSO\companion</code></td><td>Ton export d'origine (pages 1 et 2). Jamais modifié par la génération vMix.</td></tr>
+          <tr><td><code>PSO-Companion-vMix.companionconfig</code></td><td><code>P:\PSO 2\PSO\companion</code></td><td>Le fichier à importer : pages 1 et 2 + pages 3 et 4 vMix + connexion vMix.</td></tr>
+          <tr><td><code>server.js</code></td><td><code>P:\PSO 2\PSO</code></td><td>Le serveur PSO. Sa liste <code>TRANSITION_IDS</code> dit quels overlays existent ; le script s'en sert pour te prévenir d'un bouton qui ne marchera pas.</td></tr>
+        </tbody>
+      </table></div>
+      <div class="note"><b>Un fichier <code>.companionconfig</code> ne s'ouvre pas dans un éditeur.</b> C'est du texte compressé. Pour voir ce qu'il contient, utilise la commande <code>dump</code> du script (étape 5 du tutoriel).</div>
+    </section>
+
+
+    <!-- SERVEUR -->
+    <section id="serveur">
+      <h2>Serveur de skills</h2>
+      <p class="lead">Un petit serveur local, sur le même principe que PSO, met les skills et cette documentation à disposition de tous les PC de la régie.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Adresse</th><th>Contenu</th></tr></thead>
+        <tbody>
+          <tr><td><code>http://&lt;IP&gt;:3010/</code></td><td>Catalogue : chaque skill avec son .zip, sa commande d'installation et la lecture de ses fichiers. Liste aussi les exports Companion à télécharger.</td></tr>
+          <tr><td><code>http://&lt;IP&gt;:3010/docs</code></td><td>Cette documentation.</td></tr>
+          <tr><td><code>/download/skills/companion.zip</code></td><td>Le skill companion, prêt à décompresser dans <code>.claude\skills</code>.</td></tr>
+          <tr><td><code>/api/skills</code></td><td>La liste des skills en JSON.</td></tr>
+        </tbody>
+      </table></div>
+      <h3>Lancer le serveur</h3>
+      <p>Double-clique sur <code>P:\pso-companion\start.bat</code>. Au premier lancement il installe ses dépendances, puis ouvre le catalogue. La fenêtre affiche les adresses à utiliser depuis les autres PC :</p>
+      <div class="code"><pre>📦 pso-companion démarré !
+
+  ── Ce PC (localhost) ──────────────────────────────────────
+   Skills     → http://localhost:3010/
+   Doc        → http://localhost:3010/docs
+
+  ── Autre PC (réseau local) ────────────────────────────────
+   Skills     → http://192.168.1.x:3010/</pre></div>
+      <h3>Ajouter un skill</h3>
+      <p>Crée un dossier dans <code>P:\pso-companion\skills\</code> avec un <code>SKILL.md</code> dont l'en-tête contient <code>name:</code> et <code>description:</code>. Il apparaît dans le catalogue au prochain rechargement de la page, sans redémarrer le serveur.</p>
+      <div class="note warn">Le serveur est en lecture seule mais sans mot de passe : tout PC du réseau local peut télécharger les skills et les exports Companion. Ne le laisse pas tourner sur un réseau public.</div>
+      <p>Si Windows demande l'autorisation du pare-feu au premier lancement, autorise les <b>réseaux privés</b>, sinon les autres PC ne pourront pas l'ouvrir.</p>
+    </section>
+
+    <!-- TUTO -->
+    <section id="tuto">
+      <h2>Mise en place</h2>
+      <p class="lead">Coche chaque étape quand elle est faite. Ta progression reste enregistrée dans ce navigateur.</p>
+      <div class="progress"><div class="bar"><i id="bar"></i></div><span id="progress-label">0 / 8</span></div>
+      <ol class="steps">
+        <li>
+          <span class="step-num"></span>
+          <div class="step-head"><h3>Vérifier les logiciels</h3><label class="check"><input type="checkbox" id="s1"> Fait</label></div>
+          <div class="step-body">
+            <ul>
+              <li><b>Companion 4.3 ou plus récent</b> (tu as la 4.3.1). Le module vMix v5 en a besoin.</li>
+              <li><b>vMix</b> ouvert sur le PC de régie. Le replay demande une édition qui l'inclut (4K ou Pro).</li>
+              <li><b>Python 3</b> : tape <code>python --version</code> dans un terminal.</li>
+              <li><b>Git</b> et <b>GitHub CLI</b> si tu veux récupérer ou mettre à jour le dépôt.</li>
+              <li>Le <b>serveur PSO</b> se lance avec <code>start.bat</code> dans <code>P:\PSO 2\PSO</code>.</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <span class="step-num"></span>
+          <div class="step-head"><h3>Récupérer le dépôt</h3><label class="check"><input type="checkbox" id="s2"> Fait</label></div>
+          <div class="step-body">
+            <p>Déjà fait sur ce PC : le dépôt est dans <code>P:\pso-companion</code>. Sur un autre PC :</p>
+            <div class="code"><pre>git clone https://github.com/rambour33/pso-companion.git P:\pso-companion</pre><button class="copy" type="button">Copier</button></div>
+            <p>Puis lance le serveur de skills avec <code>P:\pso-companion\start.bat</code> (voir la section Serveur de skills).</p>
+            <p>Pour récupérer les dernières modifications plus tard :</p>
+            <div class="code"><pre>git -C P:\pso-companion pull</pre><button class="copy" type="button">Copier</button></div>
+          </div>
+        </li>
+        <li>
+          <span class="step-num"></span>
+          <div class="step-head"><h3>Installer le skill pour Claude</h3><label class="check"><input type="checkbox" id="s3"> Fait</label></div>
+          <div class="step-body">
+            <p>Déjà fait sur ce PC. Sur un autre PC, ou après une mise à jour du skill : ouvre le catalogue <code>http://&lt;IP&gt;:3010/</code> et copie la commande d'installation du skill, ou tape directement (remplace l'IP) :</p>
+            <div class="code"><pre>Invoke-WebRequest http://192.168.1.x:3010/download/skills/companion.zip -OutFile "$env:TEMP\companion.zip"
+Expand-Archive "$env:TEMP\companion.zip" -DestinationPath "P:\PSO 2\.claude\skills" -Force</pre><button class="copy" type="button">Copier</button></div>
+            <p>Sur le PC qui héberge le dépôt, tu peux aussi copier le dossier directement :</p>
+            <div class="code"><pre>Copy-Item P:\pso-companion\skills\companion "P:\PSO 2\.claude\skills\" -Recurse -Force</pre><button class="copy" type="button">Copier</button></div>
+            <p>Vérification : dans Claude Code ouvert sur <code>P:\PSO 2</code>, tape <code>/companion</code>. Le skill doit se charger.</p>
+          </div>
+        </li>
+        <li>
+          <span class="step-num"></span>
+          <div class="step-head"><h3>Préparer vMix</h3><label class="check"><input type="checkbox" id="s4"> Fait</label></div>
+          <div class="step-body">
+            <p>Les automatisations de la page 4 appellent les inputs <b>par leur nom</b>. Renomme tes inputs dans vMix (clic droit sur l'input) pour qu'ils portent exactement ces noms :</p>
+            <div class="table-wrap"><table>
+              <thead><tr><th>Nom exact</th><th>Contenu conseillé</th><th>Utilisé par</th></tr></thead>
+              <tbody>
+                <tr><td><code>JEU</code></td><td>Capture de la Switch / du jeu</td><td>Début match, Retour jeu</td></tr>
+                <tr><td><code>CASTERS</code></td><td>Caméra des commentateurs</td><td>Cam casters</td></tr>
+                <tr><td><code>PAUSE</code></td><td>Écran de pause / fond</td><td>Pause, Top 8</td></tr>
+                <tr><td><code>MUSIQUE</code></td><td>Playlist ou musique d'attente</td><td>Mute musique</td></tr>
+                <tr><td><code>MICROS</code></td><td>Entrée audio des micros</td><td>Mute micros</td></tr>
+              </tbody>
+            </table></div>
+            <ul>
+              <li><b>Stinger 1</b> : configure une vidéo de transition dans les réglages des stingers de vMix. Début match et Retour jeu l'utilisent.</li>
+              <li><b>Port</b> : Companion parle à vMix sur le port TCP <code>8099</code>. Le port du Web Controller de vMix ne doit pas être 8099.</li>
+              <li><b>Replay</b> (optionnel) : ajoute un input Replay et lance son enregistrement pour que les touches replay fonctionnent.</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <span class="step-num"></span>
+          <div class="step-head"><h3>Générer le fichier Companion</h3><label class="check"><input type="checkbox" id="s5"> Fait</label></div>
+          <div class="step-body">
+            <p>Le fichier <code>PSO-Companion-vMix.companionconfig</code> existe déjà : tu peux aussi le télécharger depuis le catalogue (section Exports Companion). Refais cette commande seulement si tu as modifié <code>vmix-spec.json</code> ou ton export d'origine :</p>
+            <div class="code"><pre>python P:\pso-companion\skills\companion\scripts\companion.py apply "P:\PSO 2\PSO\companion\PSO-Companion (19).companionconfig" P:\pso-companion\skills\companion\examples\vmix-spec.json --server "P:\PSO 2\PSO\server.js" --out "P:\PSO 2\PSO\companion\PSO-Companion-vMix.companionconfig"</pre><button class="copy" type="button">Copier</button></div>
+            <p>Pour contrôler le résultat, liste les touches du fichier :</p>
+            <div class="code"><pre>python P:\pso-companion\skills\companion\scripts\companion.py dump "P:\PSO 2\PSO\companion\PSO-Companion-vMix.companionconfig"</pre><button class="copy" type="button">Copier</button></div>
+            <div class="note">vMix tourne sur un autre PC ? Change <code>"vmix_host"</code> au début de <code>vmix-spec.json</code> (par exemple <code>"192.168.1.20"</code>) avant de générer, ou corrige l'adresse plus tard dans la connexion <code>vmix</code> de Companion.</div>
+          </div>
+        </li>
+        <li>
+          <span class="step-num"></span>
+          <div class="step-head"><h3>Importer dans Companion</h3><label class="check"><input type="checkbox" id="s6"> Fait</label></div>
+          <div class="step-body">
+            <ul>
+              <li>Ouvre l'interface web de Companion, onglet <b>Import / Export</b>.</li>
+              <li>Importe <code>PSO-Companion-vMix.companionconfig</code>.</li>
+              <li>Companion propose de tout remplacer ou de choisir ce qu'on importe. Pour ne rien perdre de ce que tu as changé depuis, importe seulement les <b>pages 3 et 4</b> et la connexion <b>vmix</b>.</li>
+              <li>Si Companion signale que le module <b>studiocoast-vmix</b> n'est pas installé, accepte son installation (version 5.0.5 ou plus récente).</li>
+            </ul>
+            <div class="note warn"><b>Companion ne relit pas le fichier tout seul.</b> Chaque fois que le fichier est régénéré, il faut le réimporter.</div>
+          </div>
+        </li>
+        <li>
+          <span class="step-num"></span>
+          <div class="step-head"><h3>Vérifier les connexions</h3><label class="check"><input type="checkbox" id="s7"> Fait</label></div>
+          <div class="step-body">
+            <ul>
+              <li>Onglet <b>Connections</b> : <code>http</code> et <code>vmix</code> doivent être au vert.</li>
+              <li>Sur le Stream Deck, page 4, la touche <b>vMix CONNEXION</b> passe du rouge au <span style="color:var(--pvw);font-weight:600">vert</span> quand vMix répond.</li>
+              <li>Page 3, les touches <b>PVW</b> affichent le nom de tes inputs sous le numéro.</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <span class="step-num"></span>
+          <div class="step-head"><h3>Tester à blanc</h3><label class="check"><input type="checkbox" id="s8"> Fait</label></div>
+          <div class="step-body">
+            <p>Avant un vrai stream, sans être en direct :</p>
+            <ul>
+              <li>Page 3 : appuie sur <b>PVW 1</b> (touche verte), puis <b>CUT</b> (elle devient rouge).</li>
+              <li>Page 3 : <b>OVL 1</b> met l'input en preview dans l'overlay 1. <b>OVL TOUT OFF</b> l'enlève.</li>
+              <li>Page 4 : <b>DÉBUT MATCH</b> doit enchaîner écran VS (5 s), stinger vers JEU, puis scoreboard.</li>
+              <li>Ne teste pas <b>GO LIVE</b> ni <b>FIN LIVE</b> : ils lancent et coupent réellement le stream.</li>
+            </ul>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <!-- PAGES -->
+    <section id="pages">
+      <h2>Les pages du deck</h2>
+      <p class="lead">Clique sur une touche pour voir exactement ce qu'elle fait. Un point blanc en haut à droite signale une touche qui change de couleur selon l'état de vMix ; <code>▸▸</code> signale un enchaînement.</p>
+      <div class="tabs" role="tablist" aria-label="Pages du Stream Deck">
+        <button class="tab" role="tab" type="button" data-page="1" id="tab-1">1 · PSO</button>
+        <button class="tab" role="tab" type="button" data-page="2" id="tab-2">2 · Scènes</button>
+        <button class="tab" role="tab" type="button" data-page="3" id="tab-3">3 · vMix Régie</button>
+        <button class="tab" role="tab" type="button" data-page="4" id="tab-4">4 · vMix Auto</button>
+      </div>
+      <p id="page-intro" class="lead" style="margin-top:0"></p>
+      <div class="deck-area">
+        <div>
+          <div class="deck-scroll"><div class="deck" id="deck" role="grid" aria-label="Touches de la page"></div></div>
+          <div class="deck-legend">
+            <span><i class="tally-dot" style="background:#1c9a3e"></i>Preview (vMix)</span>
+            <span><i class="tally-dot" style="background:#cf2b2b"></i>Program / actif</span>
+            <span><i class="tally-dot" style="background:#003300;border:1px solid #1c9a3e"></i>Overlay PSO affiché</span>
+            <span><i class="tally-dot" style="background:#aa0000"></i>Overlay PSO caché</span>
+          </div>
+        </div>
+        <aside class="detail" id="detail" aria-live="polite"></aside>
+      </div>
+    </section>
+
+    <!-- TYPES -->
+    <section id="boutons">
+      <h2>Types de boutons</h2>
+      <p>Chaque touche du deck appartient à l'une de ces familles. Le nom entre parenthèses est celui qu'on écrit dans une spec (le fichier qui décrit les touches).</p>
+      <div class="concepts">
+        <div class="concept"><h3>Toggle overlay <span class="mono">(toggle)</span></h3><p>Deux états. 1<sup>er</sup> appui : l'overlay PSO s'affiche, la touche devient vert foncé. 2<sup>e</sup> appui : il se cache, la touche devient rouge.</p></div>
+        <div class="concept"><h3>Commande simple <span class="mono">(get)</span></h3><p>Un appui = un ordre au serveur PSO. Exemple : +1 au score du joueur 1.</p></div>
+        <div class="concept"><h3>Bouton maître <span class="mono">(master)</span></h3><p>Affiche ou cache tous les overlays d'une page d'un coup, recolore les autres touches et les remet dans le bon état.</p></div>
+        <div class="concept"><h3>Macro <span class="mono">(macro)</span></h3><p>Touche libre : actions vMix, ordres PSO et pauses, exécutés l'un après l'autre. C'est le type des pages 3 et 4.</p></div>
+        <div class="concept"><h3>Feedback</h3><p>Couleur qui suit l'état réel de vMix : input en preview ou en direct, REC, stream, mute. Il se met à jour tout seul, même si tu agis dans vMix à la souris.</p></div>
+        <div class="concept"><h3>Enchaînement</h3><p>Par défaut Companion lance toutes les actions d'une touche en même temps. Les macros les rangent dans un groupe <b>séquentiel</b> pour que les pauses (<code>wait</code>) soient respectées.</p></div>
+      </div>
+    </section>
+
+    <!-- CLAUDE -->
+    <section id="claude">
+      <h2>Créer ou modifier des boutons</h2>
+      <h3>Avec Claude (le plus simple)</h3>
+      <p>Dans Claude Code ouvert sur <code>P:\PSO 2</code>, décris ce que tu veux en français. Le skill <code>companion</code> se charge tout seul. Exemples :</p>
+      <ul class="prompts">
+        <li>Ajoute sur la page 4 un bouton qui lance le stinger 2 puis affiche les casters.</li>
+        <li>Mets les inputs 9 à 16 en preview sur une nouvelle page 5.</li>
+        <li>Crée un bouton « Interview » : fondu vers l'input INTERVIEW, cache le scoreboard, mute la musique.</li>
+        <li>Change FADE 500 ms en FADE 1 s.</li>
+      </ul>
+      <p>Claude modifie la spec, régénère le fichier, vérifie le résultat et te dit quoi réimporter.</p>
+
+      <h3>À la main</h3>
+      <p>Ouvre <code>P:\pso-companion\skills\companion\examples\vmix-spec.json</code> dans un éditeur, modifie ou ajoute une entrée, puis refais l'étape 5 du tutoriel. Une touche s'écrit ainsi :</p>
+      <div class="code"><pre>{ "loc": "4/2/5", "kind": "macro", "text": "STINGER 2\nCASTERS", "bg": "#5a2d82",
+  "actions": [
+    { "get": "/api/deck/scoreboard/hide" },
+    { "vmix": "previewInput", "input": "CASTERS" },
+    { "vmix": "transition", "functionID": "Stinger2", "mix": 1 },
+    { "wait": 1000 },
+    { "get": "/api/deck/casters/show" }
+  ],
+  "feedbacks": [ { "vmix": "inputLive", "input": "CASTERS", "bg": "#CC0000" } ] }</pre><button class="copy" type="button">Copier</button></div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Champ</th><th>Signification</th></tr></thead>
+        <tbody>
+          <tr><td><code>loc</code></td><td>Emplacement <code>page/ligne/colonne</code>. Lignes 0 à 3, colonnes 0 à 7. <code>4/2/5</code> = page 4, 3<sup>e</sup> ligne, 6<sup>e</sup> touche.</td></tr>
+          <tr><td><code>text</code></td><td>Texte de la touche. <code>\n</code> = retour à la ligne. <code>$(vmix:input_1_name)</code> affiche le nom de l'input 1.</td></tr>
+          <tr><td><code>bg</code> / <code>size</code></td><td>Couleur de fond (<code>#RRGGBB</code>) et taille du texte (<code>auto</code>, 14, 18…).</td></tr>
+          <tr><td><code>{ "get": … }</code></td><td>Ordre au serveur PSO (liste des overlays dans <code>server.js</code>).</td></tr>
+          <tr><td><code>{ "vmix": … }</code></td><td>Action vMix. Les options non écrites prennent leur valeur par défaut (voir la référence vMix).</td></tr>
+          <tr><td><code>{ "wait": 1000 }</code></td><td>Pause en millisecondes avant l'action suivante.</td></tr>
+          <tr><td><code>feedbacks</code></td><td>Couleurs automatiques selon l'état de vMix.</td></tr>
+          <tr><td><code>steps</code></td><td>Au lieu de <code>actions</code> : une liste d'actions par appui successif (1<sup>er</sup> appui, 2<sup>e</sup> appui…).</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <!-- VMIX -->
+    <section id="vmix">
+      <h2>Référence vMix</h2>
+      <p>Les actions les plus utiles du module <code>studiocoast-vmix</code> v5. La liste complète, avec toutes les options, est dans <code>VMIX.md</code>. Un <code>input</code> peut être un numéro (<code>"3"</code>) ou un nom (<code>"JEU"</code>).</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Action</th><th>Options à connaître</th><th>Effet</th></tr></thead>
+        <tbody>
+          <tr><td><code>previewInput</code></td><td><code>input</code></td><td>Met un input en preview</td></tr>
+          <tr><td><code>programCut</code></td><td><code>input</code></td><td>Envoie un input directement à l'antenne</td></tr>
+          <tr><td><code>transitionMix</code></td><td><code>functionID</code> : Cut, Fade, Zoom, Wipe, Slide, Merge… · <code>duration</code> en ms · <code>input</code> (vide = la preview)</td><td>Transition vers l'antenne</td></tr>
+          <tr><td><code>transition</code></td><td><code>functionID</code> : Transition1 à 4, Stinger1 à 8</td><td>Lance une transition réglée dans vMix</td></tr>
+          <tr><td><code>overlayFunctions</code></td><td><code>type</code> : OverlayInput, In, Out, Off, OverlayInputAllOff · <code>overlay</code> 1 à 8 · <code>input</code></td><td>Overlays vMix</td></tr>
+          <tr><td><code>fadeToBlack</code></td><td>—</td><td>Fondu au noir (bascule)</td></tr>
+          <tr><td><code>recordingFunctions</code></td><td><code>functionID</code> : StartRecording, StopRecording, StartStopRecording</td><td>Enregistrement</td></tr>
+          <tr><td><code>streamingFunctions</code></td><td><code>functionID</code> : StartStreaming, StopStreaming, StartStopStreaming</td><td>Stream</td></tr>
+          <tr><td><code>audio</code></td><td><code>input</code> · <code>functionID</code> : Audio, AudioOn, AudioOff</td><td>Mute d'un input</td></tr>
+          <tr><td><code>busXAudio</code></td><td><code>value</code> : Master, A à G</td><td>Mute d'un bus</td></tr>
+          <tr><td><code>setText</code></td><td><code>input</code> · <code>selectedIndex</code> · <code>value</code></td><td>Change le texte d'un titre</td></tr>
+          <tr><td><code>replayMark</code></td><td><code>functionID</code> : ReplayMarkInOutLive… · <code>value</code> en secondes</td><td>Crée un moment de replay</td></tr>
+          <tr><td><code>replayPlayLastEventToOutput</code></td><td><code>channel</code></td><td>Rejoue le dernier moment</td></tr>
+          <tr><td><code>command</code></td><td><code>command</code> : n'importe quelle fonction de l'API vMix</td><td>Pour tout le reste</td></tr>
+        </tbody>
+      </table></div>
+      <h3>Feedbacks</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Feedback</th><th>La touche change de couleur quand…</th></tr></thead>
+        <tbody>
+          <tr><td><code>inputPreview</code></td><td>l'input est en preview (couleur <code>bg</code>)</td></tr>
+          <tr><td><code>inputLive</code></td><td>l'input est à l'antenne</td></tr>
+          <tr><td><code>overlayStatus</code></td><td>un overlay vMix est actif (couleurs <code>bgPreview</code> / <code>bgProgram</code>)</td></tr>
+          <tr><td><code>status</code></td><td>vMix est connecté, enregistre, streame, est en FTB… (option <code>status</code>)</td></tr>
+          <tr><td><code>busMute</code> / <code>inputAudio</code></td><td>un bus ou un input est muté</td></tr>
+          <tr><td><code>replayStatus</code></td><td>le replay enregistre ou joue</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <!-- DEPANNAGE -->
+    <section id="depannage">
+      <h2>Dépannage</h2>
+      <details><summary>Une touche vMix ne fait rien</summary>
+        <ul><li>Regarde la touche <b>vMix CONNEXION</b> (page 4) : rouge = Companion ne joint pas vMix. Vérifie que vMix est ouvert, l'adresse de la connexion <code>vmix</code> et le port 8099.</li>
+        <li>Si la touche utilise un nom d'input (<code>JEU</code>, <code>PAUSE</code>…), vérifie que l'input porte exactement ce nom dans vMix.</li>
+        <li>Les touches stinger demandent un stinger configuré dans vMix.</li></ul></details>
+      <details><summary>Une touche PSO ne fait rien</summary>
+        <ul><li>Le serveur PSO doit tourner (<code>start.bat</code>). Test rapide : ouvre <code>http://localhost:3002/api/deck</code> dans un navigateur.</li>
+        <li>Les touches <b>Éléments SB</b>, <b>Scène 1 à 9</b>, <b>All Scènes</b> et <b>Super Scènes</b> appellent des overlays absents de la liste <code>TRANSITION_IDS</code> du <code>server.js</code> actuel. Le serveur répond « introuvable ». Il faut ajouter ces overlays au serveur pour qu'elles fonctionnent.</li></ul></details>
+      <details><summary>Les touches TW Chat, TW Viewer et YT Chat n'apparaissent pas</summary>
+        <p>Dans ton export, elles sont rangées en ligne 4 de la page 1, alors que le Stream Deck XL n'a que 4 lignes (0 à 3). Déplace-les dans Companion vers des cases libres de la ligne 3 (colonnes 3 à 7).</p></details>
+      <details><summary>Les pauses d'un enchaînement ne sont pas respectées</summary>
+        <p>Les actions doivent être dans un groupe <b>séquentiel</b>. Avec une macro générée par le script c'est automatique (<code>"sequential": true</code> par défaut). Si tu as recréé la touche à la main dans Companion, place les actions dans un <i>Action Group</i> en mode <i>Sequential</i>.</p></details>
+      <details><summary>J'ai modifié la spec mais le Stream Deck n'a pas changé</summary>
+        <p>Il faut régénérer le fichier (étape 5) puis le réimporter dans Companion (étape 6). Companion ne surveille pas le fichier.</p></details>
+      <details><summary>Les touches PVW n'affichent pas le nom des inputs</summary>
+        <p>La connexion vMix doit s'appeler exactement <code>vmix</code> dans Companion : c'est ce nom qui apparaît dans <code>$(vmix:input_1_name)</code>. Si tu la renommes, les textes affichent la variable brute.</p></details>
+      <details><summary>Git refuse de travailler dans P:\pso-companion (« dubious ownership »)</summary>
+        <p>Le disque P: n'enregistre pas les propriétaires de fichiers. Autorise le dossier une fois :</p>
+        <div class="code"><pre>git config --global --add safe.directory P:/pso-companion</pre><button class="copy" type="button">Copier</button></div></details>
+    </section>
+
+    <!-- GLOSSAIRE -->
+    <section id="glossaire">
+      <h2>Glossaire</h2>
+      <dl class="gloss">
+        <dt>Preview (PVW)</dt><dd>L'image préparée, pas encore à l'antenne. Tally vert.</dd>
+        <dt>Program (PGM)</dt><dd>L'image diffusée. Tally rouge.</dd>
+        <dt>Transition</dt><dd>Passage de la preview au program : Cut (instantané), Fade (fondu)…</dd>
+        <dt>Stinger</dt><dd>Transition vidéo (animation plein écran) qui masque le changement d'image.</dd>
+        <dt>Overlay vMix</dt><dd>Calque vMix posé par-dessus l'image, numéroté de 1 à 8. À ne pas confondre avec les overlays PSO, qui sont des pages web dans OBS ou vMix.</dd>
+        <dt>FTB</dt><dd>Fade To Black : fondu au noir de la sortie.</dd>
+        <dt>Tally</dt><dd>Signal de couleur qui dit si une source est en preview ou à l'antenne.</dd>
+        <dt>Step</dt><dd>État d'une touche Companion. Une touche à 2 steps fait une chose au 1<sup>er</sup> appui et une autre au 2<sup>e</sup>.</dd>
+        <dt>Feedback</dt><dd>Règle Companion qui colore une touche selon l'état d'un logiciel.</dd>
+        <dt>Spec</dt><dd>Fichier JSON qui décrit les touches à fabriquer. Le script le transforme en fichier Companion.</dd>
+        <dt>Skill</dt><dd>Paquet d'instructions que Claude Code charge pour une tâche précise, ici <code>companion</code>.</dd>
+      </dl>
+    </section>
+  </main>
+</div>
+
+<footer>Dépôt : github.com/rambour33/pso-companion (privé) · Module vMix : bitfocus/companion-module-studiocoast-vmix v5.0.5 · Companion 4.3.1 · Stream Deck XL 8 × 4</footer>
+
+<script>
+(function(){
+  // ── Données des pages (reprises de la config générée) ──
+  const ON='#003300', OFF='#aa0000', DARK='#202020', GREY='#444444', PURPLE='#5a2d82', BLUE='#1f3a5f', SLATE='#333333';
+  const nav = {
+    up:{t:'⬆️',bg:'#000',nav:true,title:'Page précédente',does:[['int','Page précédente sur ce Stream Deck']]},
+    down:{t:'⬇️',bg:'#000',nav:true,title:'Page suivante',does:[['int','Page suivante sur ce Stream Deck']]}
+  };
+  const score = [
+    {t:'+1\nJ1',bg:'#aa0000',does:[['pso','Score joueur 1 +1']]},
+    {t:'-1\nJ1',bg:'#660000',does:[['pso','Score joueur 1 −1']]},
+    {t:'RESET\n0/0',bg:'#806200',does:[['pso','Score remis à 0 - 0']]},
+    {t:'-1\nJ2',bg:'#000066',does:[['pso','Score joueur 2 −1']]},
+    {t:'+1\nJ2',bg:'#0000aa',does:[['pso','Score joueur 2 +1']]}
+  ];
+  const tog = (t,id,bg)=>({t:'▶ '+t,bg:bg||ON,steps:true,does:[['pso','1er appui : affiche l\'overlay « '+id+' », touche vert foncé'],['pso','2e appui : le cache, touche rouge']]});
+  const scene = n=>({t:'Scène '+(n+1),bg:OFF,steps:true,warn:true,does:[['pso','1er appui : révèle custom-scene-'+n],['pso','2e appui : la cache']]});
+  const pvw = n=>({t:'PVW '+n+'\n[nom input '+n+']',bg:DARK,fb:true,does:[['vmix','Envoie l\'input '+n+' en preview']],fbs:['Vert quand l\'input '+n+' est en preview','Rouge quand il est à l\'antenne']});
+  const pgm = n=>({t:'PGM '+n+'\n[nom input '+n+']',bg:DARK,fb:true,does:[['vmix','Envoie l\'input '+n+' directement à l\'antenne (cut)']],fbs:['Rouge quand l\'input '+n+' est à l\'antenne']});
+  const ovl = n=>({t:'OVL '+n+'\nPVW→ON',bg:BLUE,fb:true,does:[['vmix','Overlay '+n+' : met l\'input en preview en overlay (ou l\'enlève s\'il y est déjà)']],fbs:['Vert : overlay en preview · Rouge : overlay à l\'antenne']});
+
+  const P = {
+    1:{intro:'Page d\'origine : score et overlays PSO. Chaque ▶ est un toggle ; « ▶ Overlays » est le bouton maître.',
+      rows:[
+        [nav.up,nav.down,...score,{t:'▶ Overlays',bg:ON,steps:true,does:[['pso','1er appui : affiche les 22 overlays PSO, passe toutes les touches ▶ en vert'],['pso','2e appui : cache tout, passe les touches en rouge'],['int','Remet chaque touche ▶ dans l\'état logique pour le prochain appui']]}],
+        [tog('Score-\nboard','scoreboard'),tog('Casters','casters'),tog('Next\nMatch','nextmatch'),tog('VS\nScreen','vs-screen','#0a1a3a'),tog('Victoire','victory'),tog('Cam','cam'),tog('Veto','stageveto'),tog('Timer','timer')],
+        [tog('H2H','h2h'),tog('Stats','player-stats'),tog('Bracket','bracket'),tog('Top 8','top8'),tog('Ticker','ticker'),tog('Frames','frames'),tog('Titre','stream-title'),tog('Chat\nCombiné','combined-chat')],
+        [Object.assign(tog('Éléments\nSB','scoreboard-elements'),{warn:true}),tog('Histori-\nque','tournament-history'),tog('Prochains\nmatchs','upcoming'),null,null,null,null,null]
+      ]},
+    2:{intro:'Scènes personnalisées PSO. Attention : ces overlays ne sont pas encore déclarés dans le serveur actuel (voir Dépannage).',
+      rows:[
+        [nav.up,nav.down,...score,{t:'All Scènes',bg:OFF,steps:true,warn:true,does:[['pso','1er appui : révèle les 9 scènes, passe leurs touches en vert'],['pso','2e appui : les cache toutes']]}],
+        [0,1,2,3,4,5,6,7].map(scene),
+        [scene(8),null,{t:'',bg:'#000',does:[['int','Touche de test sans texte : met Scène 2 sur son 1er état à l\'appui, son 2e au relâchement']]},null,null,null,null,null],
+        [Object.assign(tog('Super\nScènes','super-scenes'),{warn:true}),null,null,null,null,null,null,null]
+      ]},
+    3:{intro:'Pupitre vMix. Ligne 1 : choisir la preview. Ligne 2 : couper directement à l\'antenne. Ligne 0 : envoyer la preview à l\'antenne.',
+      rows:[
+        [nav.up,nav.down,
+          {t:'CUT',bg:GREY,does:[['vmix','Passe la preview à l\'antenne, sans transition']]},
+          {t:'FADE\n500ms',bg:GREY,does:[['vmix','Fondu de 500 ms de la preview vers l\'antenne']]},
+          {t:'AUTO\nT1',bg:GREY,does:[['vmix','Lance la transition 1 réglée dans vMix']]},
+          {t:'STINGER\n1',bg:PURPLE,does:[['vmix','Lance le stinger 1']]},
+          {t:'STINGER\n2',bg:PURPLE,does:[['vmix','Lance le stinger 2']]},
+          {t:'FTB',bg:'#000',fb:true,does:[['vmix','Fondu au noir (appuyer à nouveau pour revenir)']],fbs:['Rouge pendant le fondu au noir']}],
+        [1,2,3,4,5,6,7,8].map(pvw),
+        [1,2,3,4,5,6,7,8].map(pgm),
+        [ovl(1),ovl(2),ovl(3),
+          {t:'OVL\nTOUT OFF',bg:BLUE,does:[['vmix','Retire tous les overlays vMix']]},
+          {t:'● REC',bg:SLATE,fb:true,does:[['vmix','Démarre / arrête l\'enregistrement']],fbs:['Rouge pendant l\'enregistrement']},
+          {t:'((•))\nSTREAM',bg:SLATE,fb:true,does:[['vmix','Démarre / arrête le stream (toutes les destinations)']],fbs:['Rouge pendant le stream']},
+          {t:'MULTI\nCORDER',bg:SLATE,fb:true,does:[['vmix','Démarre / arrête le MultiCorder']],fbs:['Rouge pendant l\'enregistrement MultiCorder']},
+          {t:'MUTE\nMASTER',bg:SLATE,fb:true,does:[['vmix','Coupe / rétablit le son du bus Master']],fbs:['Rouge quand le Master est muté']}]
+      ]},
+    4:{intro:'Automatisations : une touche déclenche un enchaînement vMix + overlays PSO, avec des pauses. Les noms en majuscules (JEU, PAUSE…) sont des noms d\'inputs vMix.',
+      rows:[
+        [nav.up,nav.down,...score,{t:'vMix\nCONNEXION',bg:'#cc0000',fb:true,does:[['int','Aucune action : témoin']],fbs:['Vert quand Companion est connecté à vMix, rouge sinon']}],
+        [
+          {t:'▶ DÉBUT\nMATCH',bg:'#006600',seq:true,does:[['pso','Score à 0 - 0'],['pso','Affiche l\'écran VS'],['wait','5 s'],['pso','Cache l\'écran VS'],['vmix','Input JEU en preview'],['vmix','Stinger 1'],['wait','1 s'],['pso','Affiche le scoreboard']]},
+          {t:'■ FIN\nMATCH',bg:'#aa0000',seq:true,does:[['pso','Cache le scoreboard'],['pso','Affiche l\'écran victoire'],['wait','6 s'],['pso','Cache l\'écran victoire']]},
+          {t:'⏸ PAUSE',bg:'#806200',seq:true,does:[['pso','Cache le scoreboard'],['vmix','Fondu 1 s vers l\'input PAUSE'],['wait','1 s'],['pso','Affiche les prochains matchs']]},
+          {t:'▶ RETOUR\nJEU',bg:'#006600',seq:true,does:[['pso','Cache les prochains matchs'],['vmix','Input JEU en preview'],['vmix','Stinger 1'],['wait','1 s'],['pso','Affiche le scoreboard']]},
+          {t:'🎙 CAM\nCASTERS',bg:BLUE,seq:true,does:[['pso','Cache le scoreboard'],['vmix','Fondu 500 ms vers l\'input CASTERS'],['wait','0,5 s'],['pso','Affiche les commentateurs']]},
+          {t:'⟲ REPLAY\n10 s',bg:PURPLE,seq:true,fb:true,does:[['vmix','Marque les 10 dernières secondes'],['wait','0,3 s'],['pso','Cache le scoreboard'],['vmix','Joue ce replay vers la sortie']],fbs:['Rouge pendant la lecture du replay']},
+          {t:'■ STOP\nREPLAY',bg:PURPLE,seq:true,does:[['vmix','Arrête le replay'],['pso','Affiche le scoreboard']]},
+          {t:'🏆 TOP 8',bg:'#806200',seq:true,does:[['pso','Cache le scoreboard'],['vmix','Fondu 1 s vers l\'input PAUSE'],['wait','1 s'],['pso','Affiche le Top 8']]}
+        ],
+        [
+          {t:'🔴 GO\nLIVE',bg:SLATE,seq:true,fb:true,danger:true,does:[['vmix','Démarre l\'enregistrement'],['vmix','Démarre le stream'],['wait','2 s'],['pso','Affiche le titre du stream']],fbs:['Rouge pendant le stream']},
+          {t:'⏹ FIN\nLIVE',bg:SLATE,seq:true,danger:true,does:[['vmix','Fondu au noir'],['wait','3 s'],['vmix','Arrête le stream'],['vmix','Arrête l\'enregistrement']]},
+          {t:'MUTE\nMUSIQUE',bg:SLATE,fb:true,does:[['vmix','Coupe / rétablit le son de l\'input MUSIQUE']],fbs:['Rouge quand MUSIQUE est muté']},
+          {t:'MUTE\nMICROS',bg:SLATE,fb:true,does:[['vmix','Coupe / rétablit le son de l\'input MICROS']],fbs:['Rouge quand MICROS est muté']},
+          {t:'OVL 1\nOFF',bg:BLUE,does:[['vmix','Sort l\'overlay 1 avec sa transition']]},
+          null,null,null
+        ],
+        [null,null,null,null,null,null,null,null]
+      ]}
+  };
+
+  const deck = document.getElementById('deck');
+  const detail = document.getElementById('detail');
+  const intro = document.getElementById('page-intro');
+  const TAG = {pso:['pso','PSO'],vmix:['vmix','vMix'],wait:['','pause'],int:['','Companion']};
+  let current = '1';
+
+  function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+
+  function showDetail(k, loc){
+    if(!k){ detail.innerHTML='<div class="loc">'+loc+'</div><h4>Case libre</h4><p style="margin:0;color:var(--ink-2);font-size:.9rem">Rien n\'est programmé ici. Emplacement disponible pour un nouveau bouton : <code>'+loc+'</code>.</p>'; return; }
+    const list = k.does.map(([kind,txt])=>{const [cls,lab]=TAG[kind];return '<li><span class="tag '+cls+'">'+lab+'</span>'+esc(txt)+'</li>';}).join('');
+    let h = '<div class="loc">Emplacement '+loc+'</div><h4>'+esc(k.t||'(sans texte)')+'</h4>';
+    h += '<div class="lbl">'+(k.seq?'Enchaînement, dans l\'ordre':k.steps?'Appuis successifs':'Action')+'</div>'+(k.seq?'<ol>'+list+'</ol>':'<ul>'+list+'</ul>');
+    if(k.fbs) h += '<div class="lbl">Couleur automatique</div><ul>'+k.fbs.map(f=>'<li>'+esc(f)+'</li>').join('')+'</ul>';
+    if(k.warn) h += '<div class="note warn" style="font-size:.85rem">Overlay absent du serveur PSO actuel : cette touche ne fait rien pour l\'instant.</div>';
+    if(k.danger) h += '<div class="note warn" style="font-size:.85rem">Agit sur le direct. Ne pas tester pendant un stream.</div>';
+    detail.innerHTML = h;
+  }
+
+  function render(page){
+    current = page;
+    document.querySelectorAll('.tab').forEach(t=>t.setAttribute('aria-selected', t.dataset.page===page ? 'true':'false'));
+    intro.textContent = P[page].intro;
+    deck.innerHTML='';
+    let first=null;
+    P[page].rows.forEach((row,r)=>row.forEach((k,c)=>{
+      const b=document.createElement('button');
+      b.type='button';
+      const loc=page+'/'+r+'/'+c;
+      if(!k){ b.className='key empty'; b.setAttribute('aria-label','Case libre '+loc); }
+      else{
+        b.className='key'+(k.nav?' nav':'');
+        b.style.background=k.bg;
+        b.textContent=k.t;
+        b.setAttribute('aria-label',(k.title||k.t.replace(/\n/g,' ')||'touche sans texte')+' – '+loc);
+        if(k.fb){const m=document.createElement('span');m.className='fbmark';b.appendChild(m);}
+        if(k.seq){const s=document.createElement('span');s.className='seq';s.textContent='▸▸';b.appendChild(s);}
+        if(!first && !k.nav) first=[b,k,loc];
+      }
+      b.addEventListener('click',()=>{deck.querySelectorAll('.key').forEach(x=>x.setAttribute('aria-pressed','false'));b.setAttribute('aria-pressed','true');showDetail(k,loc);});
+      deck.appendChild(b);
+    }));
+    if(first){first[0].setAttribute('aria-pressed','true');showDetail(first[1],first[2]);}
+    try{localStorage.setItem('pso-docs-page',page);}catch(e){}
+  }
+  document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>render(t.dataset.page)));
+  let startPage='3'; try{startPage=localStorage.getItem('pso-docs-page')||'3';}catch(e){}
+  render(P[startPage]?startPage:'3');
+
+  // ── Checklist ──
+  const boxes=[...document.querySelectorAll('.steps input[type=checkbox]')];
+  function upd(){
+    const n=boxes.filter(b=>b.checked).length;
+    document.getElementById('bar').style.width=(n/boxes.length*100)+'%';
+    document.getElementById('progress-label').textContent=n+' / '+boxes.length+(n===boxes.length?' · prêt':'');
+    boxes.forEach(b=>b.closest('li').classList.toggle('done',b.checked));
+  }
+  let saved={}; try{saved=JSON.parse(localStorage.getItem('pso-docs-steps')||'{}');}catch(e){}
+  boxes.forEach(b=>{b.checked=!!saved[b.id];b.addEventListener('change',()=>{saved[b.id]=b.checked;try{localStorage.setItem('pso-docs-steps',JSON.stringify(saved));}catch(e){}upd();});});
+  upd();
+
+  // ── Copier ──
+  document.querySelectorAll('.copy').forEach(btn=>btn.addEventListener('click',async()=>{
+    const txt=btn.previousElementSibling.textContent;
+    try{await navigator.clipboard.writeText(txt);btn.textContent='Copié';}
+    catch(e){const r=document.createRange();r.selectNodeContents(btn.previousElementSibling);const s=getSelection();s.removeAllRanges();s.addRange(r);btn.textContent='Sélectionné';}
+    setTimeout(()=>btn.textContent='Copier',1600);
+  }));
+})();
+</script>
+
+</body>
+</html>
