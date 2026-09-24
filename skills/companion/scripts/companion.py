@@ -185,6 +185,7 @@ VMIX_ACTIONS = {
     'replayPlayLastEvent':     {'channel': 'Current'},
     'replayPlayLastEventToOutput': {'channel': 'Current'},
     'replayStopEvents':        {},
+    'replayRecording':         {'functionID': 'ReplayStartStopRecording'},
     'scriptStart':             {'value': ''},
     'command':                 {'command': '', 'encode': False},
 }

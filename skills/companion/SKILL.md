@@ -86,6 +86,7 @@ Avec `sequential: true` (défaut) et plusieurs items, le script les place dans u
 |---|---|
 | `examples/generique/api-http.json` | Projet quelconque avec une API HTTP : GET, POST avec corps JSON, toggles, maître, macro avec délai |
 | `examples/vmix/vmix-regie.json` | Pupitre vMix complet : transitions, preview/program avec tally, overlays, REC/stream, mute |
+| `examples/vmix/vmix-live.json` | Page 2 vMix seul : GO LIVE / FIN LIVE, replay (marquer 10 s, lire, enregistrer), mutes, sorties d'overlays, réglage de la transition 1 |
 | `examples/pso/` | Un projet réel (overlay tournoi PSO) : page d'overlays + automatisations qui mélangent l'API du projet et vMix. Voir son README pour la démarche |
 
 ## Cas non couverts par la spec

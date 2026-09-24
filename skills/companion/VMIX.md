@@ -31,6 +31,7 @@ Relevé dans le code source du module officiel **`studiocoast-vmix` v5.0.5** (gi
 | `replayMark` | `functionID: 'ReplayMarkIn'` (…`ReplayMarkInOutLive`, `ReplayMarkOut`…), `value: '10'` (secondes), `value2: '10'` | Marquer un replay |
 | `replayPlayLastEventToOutput` | `channel: 'Current'` / `A` / `B` | Rejouer le dernier event |
 | `replayStopEvents` | — | Stopper le replay |
+| `replayRecording` | `functionID: 'ReplayStartStopRecording'` / `ReplayStartRecording` / `ReplayStopRecording` | Enregistrement du replay |
 | `scriptStart` | `value: 'NomDuScript'` | Lancer un script vMix |
 | `command` | `command: 'Fonction Param=…'`, `encode: false` | N'importe quelle fonction de l'API vMix |
 
