@@ -46,7 +46,7 @@ Le serveur est en lecture seule, sans authentification : à réserver au réseau
 ## Installer le skill companion
 Depuis n'importe quel PC du réseau (remplacer l'IP), pour tous tes projets :
 ```powershell
-Invoke-WebRequest http://192.168.1.105:3011/download/skills/companion.zip -OutFile "$env:TEMP\companion.zip"
+Invoke-WebRequest http://192.168.1.x:3011/download/skills/companion.zip -OutFile "$env:TEMP\companion.zip"
 Expand-Archive "$env:TEMP\companion.zip" -DestinationPath "$env:USERPROFILE\.claude\skills" -Force
 ```
 Pour un seul projet : `-DestinationPath "<projet>\.claude\skills"`.
