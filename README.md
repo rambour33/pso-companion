@@ -1,6 +1,6 @@
 # PSO Companion
 
-Skill Claude Code pour construire des boutons **Bitfocus Companion** (Stream Deck) qui pilotent l'overlay PSO (`http://localhost:3002/api/deck/...`).
+Skill Claude Code pour construire des boutons **Bitfocus Companion** (Stream Deck) qui pilotent l'overlay PSO (`http://localhost:3002/api/deck/...`) et **vMix** (module `studiocoast-vmix` v5).
 
 Le skill lit et modifie directement un export `.companionconfig` (JSON gzip, Companion 4.x) : boutons toggle d'overlay, boutons score, boutons maîtres « tout afficher / tout cacher », navigation de pages.
 
@@ -9,7 +9,9 @@ Le skill lit et modifie directement un export `.companionconfig` (JSON gzip, Com
 |---|---|
 | `SKILL.md` | Instructions du skill (conventions des boutons PSO, endpoints, méthode) |
 | `scripts/companion.py` | Outil `dump` / `apply` pour lire et générer les boutons |
-| `examples/spec.json` | Exemple de spec de boutons |
+| `VMIX.md` | Référence des actions / feedbacks vMix (relevée dans le code du module) |
+| `examples/spec.json` | Exemple de spec de boutons PSO |
+| `examples/vmix-spec.json` | Pages « vMix Régie » (pupitre avec tally) et « vMix Auto » (automatisations vMix + PSO) |
 
 ## Installation
 Copier le dossier dans les skills Claude Code du projet PSO :
@@ -37,6 +39,12 @@ python scripts/companion.py apply "<config>" examples/spec.json --server PSO/ser
 ```
 
 Après `apply`, réimporter le fichier dans Companion (Import/Export → Import).
+
+### Générer les pages vMix dans un nouveau fichier
+```powershell
+python scripts/companion.py apply "PSO/companion/PSO-Companion (19).companionconfig" examples/vmix-spec.json --server PSO/server.js --out "PSO/companion/PSO-Companion-vMix.companionconfig"
+```
+La connexion vMix (`127.0.0.1:8099`) est ajoutée si elle n'existe pas ; changer `vmix_host` dans la spec si vMix tourne sur un autre PC.
 
 ## Prérequis
 - Python 3.8+

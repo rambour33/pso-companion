@@ -1,6 +1,6 @@
 ---
 name: companion
-description: Crée ou modifie des boutons/macros Bitfocus Companion (Stream Deck) pour l'overlay PSO — boutons toggle d'overlay, boutons score, boutons maîtres "tout afficher/cacher", navigation de pages — en éditant directement le fichier .companionconfig. À utiliser quand l'utilisateur parle de Companion, Stream Deck, raccourcis, macros ou boutons deck.
+description: Crée ou modifie des boutons/macros Bitfocus Companion (Stream Deck) pour l'overlay PSO et pour vMix — boutons toggle d'overlay, score, boutons maîtres, pupitre vMix (preview/program/transitions/overlays/REC/stream avec tally), automatisations qui enchaînent vMix et PSO — en éditant directement le fichier .companionconfig. À utiliser quand l'utilisateur parle de Companion, Stream Deck, vMix, raccourcis, macros ou boutons deck.
 ---
 
 # Companion — macros Stream Deck pour PSO
@@ -9,7 +9,8 @@ description: Crée ou modifie des boutons/macros Bitfocus Companion (Stream Deck
 - Export Companion : `PSO/companion/*.companionconfig` (le plus récent, ex. `PSO-Companion (19).companionconfig`).
   C'est du **JSON compressé gzip** (format v12, Companion 4.3). Ne jamais l'ouvrir avec Read/Edit : passer par le script.
 - Stream Deck XL : grille **8 colonnes × 4 lignes**. Adresse d'un bouton = `page/ligne/colonne` (0-indexé pour ligne et colonne, ex. `1/0/7` = page 1, ligne du haut, dernière colonne).
-- Une seule connexion HTTP : module `generic-http`, préfixe `http://localhost:3002`. Toutes les macros sont des **GET** vers le serveur PSO.
+- Connexion HTTP : module `generic-http`, préfixe `http://localhost:3002`. Les commandes PSO sont des **GET** vers ce serveur.
+- Connexion vMix : module `studiocoast-vmix` v5, label `vmix`, TCP 8099. Créée automatiquement par le script si une spec l'utilise. Actions, options et feedbacks : voir **VMIX.md** (à lire avant toute macro vMix).
 - Companion ne relit pas le fichier tout seul : après modification, l'utilisateur doit le **réimporter** (Companion → Import/Export → Import → remplacer ou choisir les pages).
 
 ## Endpoints PSO (server.js, section « Stream Deck »)
@@ -39,7 +40,7 @@ Les `<overlay>` valides sont ceux de `TRANSITION_IDS` dans `PSO/server.js` (à r
 3. Choisir des emplacements libres (ou confirmer avec l'utilisateur avant d'écraser un bouton existant).
 4. Écrire un fichier spec JSON dans le scratchpad, puis :
    `python .claude/skills/companion/scripts/companion.py apply "<config>" <spec.json> --server PSO/server.js --dry-run`
-   puis sans `--dry-run`. Le script crée `<config>.bak` avant d'écrire.
+   puis sans `--dry-run`. Le script crée `<config>.bak` avant d'écrire. Avec `--out <nouveau fichier>`, il écrit ailleurs et laisse l'original intact (à privilégier pour un gros ajout).
 5. Refaire un `dump` pour vérifier, et rappeler à l'utilisateur de réimporter le fichier dans Companion.
 
 ## Format de spec.json
@@ -65,6 +66,32 @@ Les `<overlay>` valides sont ceux de `TRANSITION_IDS` dans `PSO/server.js` (à r
 | `master` | `targets` (adresses), `text` | Rejoue les URLs step 0/step 1 des cibles + couleurs + synchro des steps. Construit après les autres boutons, donc les cibles peuvent être dans la même spec |
 | `page_up` / `page_down` | — | Navigation de page (surface courante) |
 | `pagenum` / `pageup` / `pagedown` | — | Contrôles de page natifs Companion |
+| `macro` | `actions` (liste d'items), ou `steps` (liste de listes, un step par appui), `feedbacks`, `sequential` (défaut true), `text`, `bg`, `fg`, `size` | Bouton libre : mélange PSO + vMix + délais |
 | `empty` | — | Supprime le bouton à cet emplacement |
 
-Couleurs : entier Companion ou `"#RRGGBB"`. Pour une macro que le script ne sait pas faire (délai, feedback, variables…), charger la config avec `load()`, construire les actions avec les helpers (`act_get`, `act_internal`, `act_bgcolor`, `act_set_step`, `button`) dans un petit script Python, puis `save()`.
+### Items d'une macro
+- `{ "get": "/api/deck/scoreboard/show" }` : requête PSO
+- `{ "wait": 1000 }` : pause en ms (utile seulement en séquentiel)
+- `{ "vmix": "<actionId>", ...options }` : action vMix ; les options absentes prennent les défauts du module (VMIX.md)
+
+Avec `sequential: true` et plusieurs items, le script les place dans un `action_group` séquentiel, sinon Companion les lance tous en même temps et les `wait` ne servent à rien.
+
+### Feedbacks (vMix)
+`{ "vmix": "inputLive", "input": "1", "bg": "#CC0000" }`. Pour un feedback booléen (`status`, `busMute`, `inputAudio`, `replayStatus`), ajouter `"style": { "bgcolor": "#CC0000", "color": "#FFFFFF" }`.
+
+```json
+{ "loc": "4/1/0", "kind": "macro", "text": "▶ DÉBUT\nMATCH", "bg": "#006600",
+  "actions": [
+    { "get": "/api/deck/vs-screen/show" }, { "wait": 5000 }, { "get": "/api/deck/vs-screen/hide" },
+    { "vmix": "previewInput", "input": "JEU" }, { "vmix": "transition", "functionID": "Stinger1" },
+    { "wait": 1000 }, { "get": "/api/deck/scoreboard/show" } ] }
+```
+Exemple complet : `examples/vmix-spec.json` (page « vMix Régie » + page « vMix Auto »).
+
+### Conventions vMix
+- Tally : Preview vert `#009900`, Program rouge `#CC0000`, via les feedbacks `inputPreview` / `inputLive`.
+- Texte d'un bouton d'input : `PVW 1\n$(vmix:input_1_name)` pour afficher le vrai nom de l'input.
+- Dans les automatisations, désigner les inputs vMix par leur **nom** (`JEU`, `CASTERS`, `PAUSE`…) plutôt que par leur numéro, et rappeler à l'utilisateur de nommer ses inputs pareil dans vMix.
+- Actions à risque (arrêt du stream, FTB) : les regrouper à part et le signaler à l'utilisateur.
+
+Couleurs : entier Companion ou `"#RRGGBB"`. Pour un cas que la spec ne couvre pas, importer `companion.py` dans un petit script Python et utiliser `load()`, les helpers (`act_get`, `act_vmix`, `fb_vmix`, `act_wait`, `act_group`, `act_internal`, `button`) puis `save()`.
