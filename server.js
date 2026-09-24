@@ -42,7 +42,7 @@ function safeJoin(base, rel) {
 function walk(dir, prefix = '') {
   const out = [];
   for (const ent of fs.readdirSync(dir, { withFileTypes: true })) {
-    if (ent.name.startsWith('.') || ent.name === '__pycache__') continue;
+    if (ent.name.startsWith('.') || ent.name === '__pycache__' || ent.name.endsWith('.bak')) continue;
     const rel = prefix ? `${prefix}/${ent.name}` : ent.name;
     const full = path.join(dir, ent.name);
     if (ent.isDirectory()) out.push(...walk(full, rel));
