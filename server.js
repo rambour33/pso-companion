@@ -223,7 +223,7 @@ app.get('/docs', (req, res) => res.sendFile(path.join(ROOT, 'public', 'docs.html
 
 // ─── Démarrage ───────────────────────────────────────────────────────────────
 
-app.listen(PORT, '0.0.0.0', () => {
+const server = app.listen(PORT, '0.0.0.0', () => {
   const ips = getLocalIPs();
   console.log('');
   console.log('📦 pso-companion démarré !');
@@ -243,4 +243,17 @@ app.listen(PORT, '0.0.0.0', () => {
   console.log(`  ${listSkills().length} skill(s) dans ${SKILLS_DIR}`);
   if (EXPORTS_DIR) console.log(`  Exports Companion : ${EXPORTS_DIR}`);
   console.log('');
+});
+
+server.on('error', err => {
+  if (err.code === 'EADDRINUSE') {
+    console.error('');
+    console.error(`  [ERREUR] Le port ${PORT} est déjà utilisé.`);
+    console.error('  pso-companion tourne sans doute déjà dans une autre fenêtre :');
+    console.error(`  ouvre http://localhost:${PORT}/ ou ferme l'autre fenêtre puis relance.`);
+    console.error(`  (Pour changer de port : modifier "port" dans config.json.)`);
+    console.error('');
+    process.exit(1);
+  }
+  throw err;
 });
