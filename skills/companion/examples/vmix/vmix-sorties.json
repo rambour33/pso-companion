@@ -1,0 +1,391 @@
+{
+  "vmix": {
+    "host": "127.0.0.1",
+    "port": 8099
+  },
+  "pages": {
+    "9": {
+      "name": "vMix Sorties"
+    }
+  },
+  "buttons": [
+    {
+      "loc": "9/0/6",
+      "kind": "page_up"
+    },
+    {
+      "loc": "9/0/7",
+      "kind": "page_down"
+    },
+    {
+      "loc": "9/0/0",
+      "kind": "macro",
+      "text": "EXTERNAL",
+      "bg": "#333333",
+      "actions": [
+        {
+          "vmix": "externalFunctions",
+          "functionID": "StartStopExternal"
+        }
+      ],
+      "feedbacks": [
+        {
+          "vmix": "status",
+          "status": "external",
+          "style": {
+            "bgcolor": "#CC0000",
+            "color": "#FFFFFF"
+          }
+        }
+      ]
+    },
+    {
+      "loc": "9/0/1",
+      "kind": "macro",
+      "text": "FULL\nSCREEN",
+      "bg": "#333333",
+      "actions": [
+        {
+          "vmix": "fullscreenFunctions",
+          "functionID": "Fullscreen"
+        }
+      ],
+      "feedbacks": [
+        {
+          "vmix": "status",
+          "status": "fullscreen",
+          "style": {
+            "bgcolor": "#CC0000",
+            "color": "#FFFFFF"
+          }
+        }
+      ]
+    },
+    {
+      "loc": "9/0/2",
+      "kind": "macro",
+      "text": "SRT",
+      "bg": "#333333",
+      "actions": [
+        {
+          "vmix": "srtFunctions",
+          "functionID": "StartStopSRTOutput"
+        }
+      ],
+      "size": 18
+    },
+    {
+      "loc": "9/0/3",
+      "kind": "macro",
+      "text": "📷 SNAP\nSHOT",
+      "bg": "#444444",
+      "actions": [
+        {
+          "vmix": "snapshot",
+          "input": "",
+          "value": "Snapshot {0:yyyy-MM-dd HH-mm-ss}.jpg"
+        }
+      ]
+    },
+    {
+      "loc": "9/0/4",
+      "kind": "macro",
+      "text": "REC\nLOG",
+      "bg": "#444444",
+      "actions": [
+        {
+          "vmix": "writeDurationToRecordingLog",
+          "value": "Companion"
+        }
+      ]
+    },
+    {
+      "loc": "9/1/0",
+      "kind": "macro",
+      "text": "((•))\nSTREAM 1",
+      "bg": "#333333",
+      "actions": [
+        {
+          "vmix": "streamingFunctions",
+          "functionID": "StartStopStreaming",
+          "value": 1
+        }
+      ],
+      "feedbacks": [
+        {
+          "vmix": "status",
+          "status": "streaming",
+          "value": "0",
+          "style": {
+            "bgcolor": "#CC0000",
+            "color": "#FFFFFF"
+          }
+        }
+      ],
+      "size": 14
+    },
+    {
+      "loc": "9/1/1",
+      "kind": "macro",
+      "text": "((•))\nSTREAM 2",
+      "bg": "#333333",
+      "actions": [
+        {
+          "vmix": "streamingFunctions",
+          "functionID": "StartStopStreaming",
+          "value": 2
+        }
+      ],
+      "feedbacks": [
+        {
+          "vmix": "status",
+          "status": "streaming",
+          "value": "1",
+          "style": {
+            "bgcolor": "#CC0000",
+            "color": "#FFFFFF"
+          }
+        }
+      ],
+      "size": 14
+    },
+    {
+      "loc": "9/1/2",
+      "kind": "macro",
+      "text": "((•))\nSTREAM 3",
+      "bg": "#333333",
+      "actions": [
+        {
+          "vmix": "streamingFunctions",
+          "functionID": "StartStopStreaming",
+          "value": 3
+        }
+      ],
+      "feedbacks": [
+        {
+          "vmix": "status",
+          "status": "streaming",
+          "value": "2",
+          "style": {
+            "bgcolor": "#CC0000",
+            "color": "#FFFFFF"
+          }
+        }
+      ],
+      "size": 14
+    },
+    {
+      "loc": "9/1/3",
+      "kind": "macro",
+      "text": "● REC",
+      "bg": "#333333",
+      "actions": [
+        {
+          "vmix": "recordingFunctions",
+          "functionID": "StartStopRecording"
+        }
+      ],
+      "feedbacks": [
+        {
+          "vmix": "status",
+          "status": "recording",
+          "style": {
+            "bgcolor": "#CC0000",
+            "color": "#FFFFFF"
+          }
+        }
+      ],
+      "size": 18
+    },
+    {
+      "loc": "9/1/4",
+      "kind": "macro",
+      "text": "MULTI\nCORDER",
+      "bg": "#333333",
+      "actions": [
+        {
+          "vmix": "multicorderFunctions",
+          "functionID": "StartStopMultiCorder"
+        }
+      ],
+      "feedbacks": [
+        {
+          "vmix": "status",
+          "status": "multiCorder",
+          "style": {
+            "bgcolor": "#CC0000",
+            "color": "#FFFFFF"
+          }
+        }
+      ]
+    },
+    {
+      "loc": "9/2/0",
+      "kind": "macro",
+      "text": "OUT 2\nPGM",
+      "bg": "#1D4E57",
+      "actions": [
+        {
+          "vmix": "outputSet",
+          "functionID": "SetOutput2",
+          "value": "Output"
+        }
+      ],
+      "size": 14
+    },
+    {
+      "loc": "9/2/1",
+      "kind": "macro",
+      "text": "OUT 2\nPVW",
+      "bg": "#1D4E57",
+      "actions": [
+        {
+          "vmix": "outputSet",
+          "functionID": "SetOutput2",
+          "value": "Preview"
+        }
+      ],
+      "size": 14
+    },
+    {
+      "loc": "9/2/2",
+      "kind": "macro",
+      "text": "OUT 2\nMULTI\nVIEW",
+      "bg": "#1D4E57",
+      "actions": [
+        {
+          "vmix": "outputSet",
+          "functionID": "SetOutput2",
+          "value": "MultiView"
+        }
+      ],
+      "size": 14
+    },
+    {
+      "loc": "9/2/3",
+      "kind": "macro",
+      "text": "OUT 2\nREPLAY",
+      "bg": "#1D4E57",
+      "actions": [
+        {
+          "vmix": "outputSet",
+          "functionID": "SetOutput2",
+          "value": "Replay"
+        }
+      ],
+      "size": 14
+    },
+    {
+      "loc": "9/3/0",
+      "kind": "macro",
+      "text": "FULLSCR\nPGM",
+      "bg": "#1D4E57",
+      "actions": [
+        {
+          "vmix": "outputSet",
+          "functionID": "SetOutputFullscreen",
+          "value": "Output"
+        }
+      ],
+      "size": 14
+    },
+    {
+      "loc": "9/3/1",
+      "kind": "macro",
+      "text": "FULLSCR\nPVW",
+      "bg": "#1D4E57",
+      "actions": [
+        {
+          "vmix": "outputSet",
+          "functionID": "SetOutputFullscreen",
+          "value": "Preview"
+        }
+      ],
+      "size": 14
+    },
+    {
+      "loc": "9/3/2",
+      "kind": "macro",
+      "text": "FULLSCR\nMULTI\nVIEW",
+      "bg": "#1D4E57",
+      "actions": [
+        {
+          "vmix": "outputSet",
+          "functionID": "SetOutputFullscreen",
+          "value": "MultiView"
+        }
+      ],
+      "size": 14
+    },
+    {
+      "loc": "9/3/3",
+      "kind": "macro",
+      "text": "FULLSCR\nREPLAY",
+      "bg": "#1D4E57",
+      "actions": [
+        {
+          "vmix": "outputSet",
+          "functionID": "SetOutputFullscreen",
+          "value": "Replay"
+        }
+      ],
+      "size": 14
+    },
+    {
+      "loc": "9/2/4",
+      "kind": "macro",
+      "text": "EXT 2\nPGM",
+      "bg": "#2D3F57",
+      "actions": [
+        {
+          "vmix": "outputSet",
+          "functionID": "SetOutputExternal2",
+          "value": "Output"
+        }
+      ],
+      "size": 14
+    },
+    {
+      "loc": "9/2/5",
+      "kind": "macro",
+      "text": "EXT 2\nPVW",
+      "bg": "#2D3F57",
+      "actions": [
+        {
+          "vmix": "outputSet",
+          "functionID": "SetOutputExternal2",
+          "value": "Preview"
+        }
+      ],
+      "size": 14
+    },
+    {
+      "loc": "9/2/6",
+      "kind": "macro",
+      "text": "EXT 2\nMULTI\nVIEW",
+      "bg": "#2D3F57",
+      "actions": [
+        {
+          "vmix": "outputSet",
+          "functionID": "SetOutputExternal2",
+          "value": "MultiView"
+        }
+      ],
+      "size": 14
+    },
+    {
+      "loc": "9/2/7",
+      "kind": "macro",
+      "text": "EXT 2\nREPLAY",
+      "bg": "#2D3F57",
+      "actions": [
+        {
+          "vmix": "outputSet",
+          "functionID": "SetOutputExternal2",
+          "value": "Replay"
+        }
+      ],
+      "size": 14
+    }
+  ]
+}

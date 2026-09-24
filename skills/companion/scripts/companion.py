@@ -25,8 +25,12 @@ _ALPHABET = string.ascii_letters + string.digits + '_-'
 # ── Lecture / écriture ────────────────────────────────────────────────────────
 
 def load(path):
+    """Lit un export Companion, compressé (gzip) ou en JSON clair : Companion propose les deux."""
     with open(path, 'rb') as f:
-        return json.loads(gzip.decompress(f.read()).decode('utf-8', errors='surrogatepass'))
+        raw = f.read()
+    if raw[:2] == b'\x1f\x8b':
+        raw = gzip.decompress(raw)
+    return json.loads(raw.decode('utf-8-sig', errors='surrogatepass'))
 
 
 def save(path, data, backup=True):
@@ -188,6 +192,26 @@ VMIX_ACTIONS = {
     'replayRecording':         {'functionID': 'ReplayStartStopRecording'},
     'scriptStart':             {'value': ''},
     'command':                 {'command': '', 'encode': False},
+    # Audio
+    'solo':                    {'input': '1', 'functionID': 'Solo'},
+    'soloAllOff':              {},
+    'audioMixerShowHide':      {},
+    'setInputVolume':          {'input': '1', 'adjustment': 'Set', 'amount': '100'},
+    'setVolumeFade':           {'input': '1', 'fadeMin': '0', 'fadeTime': '2000'},
+    'setBusVolume':            {'value': 'Master', 'adjustment': 'Set', 'amount': '100'},
+    'setBusVolumeFade':        {'value': 'Master', 'fadeVol': '0', 'fadeTime': '2000'},   # vMix 28+
+    # Lecture (inputType True = l'input en preview)
+    'videoActions':            {'input': '1', 'inputType': False, 'functionID': 'Play'},
+    'videoPlayhead':           {'input': '1', 'inputType': False, 'adjustment': 'Set', 'value': 0},
+    'videoMark':               {'input': '1', 'inputType': False, 'functionID': 'MarkIn'},
+    'playListFunctions':       {'functionID': 'StartPlayList'},
+    'controlCountdown':        {'functionID': 'StartCountdown', 'input': '1', 'selectedIndex': '0'},
+    # Général / sorties
+    'tbar':                    {'value': '0'},
+    'outputSet':               {'functionID': 'SetOutput2', 'value': 'Output', 'mix': 1, 'input': '1'},
+    'srtFunctions':            {'functionID': 'StartStopSRTOutput'},
+    'snapshot':                {'input': '', 'value': ''},
+    'writeDurationToRecordingLog': {'value': ''},
 }
 
 # type : 'boolean' (couleur via style) ou 'advanced' (couleurs dans les options fg/bg)
@@ -199,6 +223,8 @@ VMIX_FEEDBACKS = {
     'busMute':       ('boolean',  {'value': 'Master'}),
     'inputAudio':    ('boolean',  {'input': '1'}),
     'replayStatus':  ('boolean',  {'status': 'recording'}),
+    'inputSolo':     ('boolean',  {'input': '1'}),
+    'inputState':    ('boolean',  {'input': '1', 'type': 'playing'}),
 }
 
 

@@ -1,0 +1,612 @@
+{
+  "vmix": {
+    "host": "127.0.0.1",
+    "port": 8099
+  },
+  "pages": {
+    "6": {
+      "name": "vMix Audio"
+    }
+  },
+  "buttons": [
+    {
+      "loc": "6/0/6",
+      "kind": "page_up"
+    },
+    {
+      "loc": "6/0/7",
+      "kind": "page_down"
+    },
+    {
+      "loc": "6/0/0",
+      "kind": "macro",
+      "text": "MUTE\nMASTER",
+      "bg": "#333333",
+      "actions": [
+        {
+          "vmix": "busXAudio",
+          "value": "Master",
+          "functionID": "BusXAudio"
+        }
+      ],
+      "feedbacks": [
+        {
+          "vmix": "busMute",
+          "value": "Master",
+          "style": {
+            "bgcolor": "#CC0000",
+            "color": "#FFFFFF"
+          }
+        }
+      ]
+    },
+    {
+      "loc": "6/0/1",
+      "kind": "macro",
+      "text": "MUTE\nBUS A",
+      "bg": "#333333",
+      "actions": [
+        {
+          "vmix": "busXAudio",
+          "value": "A",
+          "functionID": "BusXAudio"
+        }
+      ],
+      "feedbacks": [
+        {
+          "vmix": "busMute",
+          "value": "A",
+          "style": {
+            "bgcolor": "#CC0000",
+            "color": "#FFFFFF"
+          }
+        }
+      ]
+    },
+    {
+      "loc": "6/0/2",
+      "kind": "macro",
+      "text": "MUTE\nBUS B",
+      "bg": "#333333",
+      "actions": [
+        {
+          "vmix": "busXAudio",
+          "value": "B",
+          "functionID": "BusXAudio"
+        }
+      ],
+      "feedbacks": [
+        {
+          "vmix": "busMute",
+          "value": "B",
+          "style": {
+            "bgcolor": "#CC0000",
+            "color": "#FFFFFF"
+          }
+        }
+      ]
+    },
+    {
+      "loc": "6/0/3",
+      "kind": "macro",
+      "text": "SOLO\nOFF",
+      "bg": "#444444",
+      "actions": [
+        {
+          "vmix": "soloAllOff"
+        }
+      ]
+    },
+    {
+      "loc": "6/0/4",
+      "kind": "macro",
+      "text": "MIXER\nAUDIO",
+      "bg": "#444444",
+      "actions": [
+        {
+          "vmix": "audioMixerShowHide"
+        }
+      ]
+    },
+    {
+      "loc": "6/1/0",
+      "kind": "macro",
+      "text": "MUTE 1\n$(vmix:input_1_name)",
+      "bg": "#333333",
+      "actions": [
+        {
+          "vmix": "audio",
+          "input": "1",
+          "functionID": "Audio"
+        }
+      ],
+      "feedbacks": [
+        {
+          "vmix": "inputAudio",
+          "input": "1",
+          "style": {
+            "bgcolor": "#CC0000",
+            "color": "#FFFFFF"
+          }
+        }
+      ],
+      "size": 14
+    },
+    {
+      "loc": "6/2/0",
+      "kind": "macro",
+      "text": "SOLO 1\n$(vmix:input_1_name)",
+      "bg": "#2B2B1A",
+      "actions": [
+        {
+          "vmix": "solo",
+          "input": "1",
+          "functionID": "Solo"
+        }
+      ],
+      "feedbacks": [
+        {
+          "vmix": "inputSolo",
+          "input": "1",
+          "style": {
+            "bgcolor": "#E0C000",
+            "color": "#000000"
+          }
+        }
+      ],
+      "size": 14
+    },
+    {
+      "loc": "6/1/1",
+      "kind": "macro",
+      "text": "MUTE 2\n$(vmix:input_2_name)",
+      "bg": "#333333",
+      "actions": [
+        {
+          "vmix": "audio",
+          "input": "2",
+          "functionID": "Audio"
+        }
+      ],
+      "feedbacks": [
+        {
+          "vmix": "inputAudio",
+          "input": "2",
+          "style": {
+            "bgcolor": "#CC0000",
+            "color": "#FFFFFF"
+          }
+        }
+      ],
+      "size": 14
+    },
+    {
+      "loc": "6/2/1",
+      "kind": "macro",
+      "text": "SOLO 2\n$(vmix:input_2_name)",
+      "bg": "#2B2B1A",
+      "actions": [
+        {
+          "vmix": "solo",
+          "input": "2",
+          "functionID": "Solo"
+        }
+      ],
+      "feedbacks": [
+        {
+          "vmix": "inputSolo",
+          "input": "2",
+          "style": {
+            "bgcolor": "#E0C000",
+            "color": "#000000"
+          }
+        }
+      ],
+      "size": 14
+    },
+    {
+      "loc": "6/1/2",
+      "kind": "macro",
+      "text": "MUTE 3\n$(vmix:input_3_name)",
+      "bg": "#333333",
+      "actions": [
+        {
+          "vmix": "audio",
+          "input": "3",
+          "functionID": "Audio"
+        }
+      ],
+      "feedbacks": [
+        {
+          "vmix": "inputAudio",
+          "input": "3",
+          "style": {
+            "bgcolor": "#CC0000",
+            "color": "#FFFFFF"
+          }
+        }
+      ],
+      "size": 14
+    },
+    {
+      "loc": "6/2/2",
+      "kind": "macro",
+      "text": "SOLO 3\n$(vmix:input_3_name)",
+      "bg": "#2B2B1A",
+      "actions": [
+        {
+          "vmix": "solo",
+          "input": "3",
+          "functionID": "Solo"
+        }
+      ],
+      "feedbacks": [
+        {
+          "vmix": "inputSolo",
+          "input": "3",
+          "style": {
+            "bgcolor": "#E0C000",
+            "color": "#000000"
+          }
+        }
+      ],
+      "size": 14
+    },
+    {
+      "loc": "6/1/3",
+      "kind": "macro",
+      "text": "MUTE 4\n$(vmix:input_4_name)",
+      "bg": "#333333",
+      "actions": [
+        {
+          "vmix": "audio",
+          "input": "4",
+          "functionID": "Audio"
+        }
+      ],
+      "feedbacks": [
+        {
+          "vmix": "inputAudio",
+          "input": "4",
+          "style": {
+            "bgcolor": "#CC0000",
+            "color": "#FFFFFF"
+          }
+        }
+      ],
+      "size": 14
+    },
+    {
+      "loc": "6/2/3",
+      "kind": "macro",
+      "text": "SOLO 4\n$(vmix:input_4_name)",
+      "bg": "#2B2B1A",
+      "actions": [
+        {
+          "vmix": "solo",
+          "input": "4",
+          "functionID": "Solo"
+        }
+      ],
+      "feedbacks": [
+        {
+          "vmix": "inputSolo",
+          "input": "4",
+          "style": {
+            "bgcolor": "#E0C000",
+            "color": "#000000"
+          }
+        }
+      ],
+      "size": 14
+    },
+    {
+      "loc": "6/1/4",
+      "kind": "macro",
+      "text": "MUTE 5\n$(vmix:input_5_name)",
+      "bg": "#333333",
+      "actions": [
+        {
+          "vmix": "audio",
+          "input": "5",
+          "functionID": "Audio"
+        }
+      ],
+      "feedbacks": [
+        {
+          "vmix": "inputAudio",
+          "input": "5",
+          "style": {
+            "bgcolor": "#CC0000",
+            "color": "#FFFFFF"
+          }
+        }
+      ],
+      "size": 14
+    },
+    {
+      "loc": "6/2/4",
+      "kind": "macro",
+      "text": "SOLO 5\n$(vmix:input_5_name)",
+      "bg": "#2B2B1A",
+      "actions": [
+        {
+          "vmix": "solo",
+          "input": "5",
+          "functionID": "Solo"
+        }
+      ],
+      "feedbacks": [
+        {
+          "vmix": "inputSolo",
+          "input": "5",
+          "style": {
+            "bgcolor": "#E0C000",
+            "color": "#000000"
+          }
+        }
+      ],
+      "size": 14
+    },
+    {
+      "loc": "6/1/5",
+      "kind": "macro",
+      "text": "MUTE 6\n$(vmix:input_6_name)",
+      "bg": "#333333",
+      "actions": [
+        {
+          "vmix": "audio",
+          "input": "6",
+          "functionID": "Audio"
+        }
+      ],
+      "feedbacks": [
+        {
+          "vmix": "inputAudio",
+          "input": "6",
+          "style": {
+            "bgcolor": "#CC0000",
+            "color": "#FFFFFF"
+          }
+        }
+      ],
+      "size": 14
+    },
+    {
+      "loc": "6/2/5",
+      "kind": "macro",
+      "text": "SOLO 6\n$(vmix:input_6_name)",
+      "bg": "#2B2B1A",
+      "actions": [
+        {
+          "vmix": "solo",
+          "input": "6",
+          "functionID": "Solo"
+        }
+      ],
+      "feedbacks": [
+        {
+          "vmix": "inputSolo",
+          "input": "6",
+          "style": {
+            "bgcolor": "#E0C000",
+            "color": "#000000"
+          }
+        }
+      ],
+      "size": 14
+    },
+    {
+      "loc": "6/1/6",
+      "kind": "macro",
+      "text": "MUTE 7\n$(vmix:input_7_name)",
+      "bg": "#333333",
+      "actions": [
+        {
+          "vmix": "audio",
+          "input": "7",
+          "functionID": "Audio"
+        }
+      ],
+      "feedbacks": [
+        {
+          "vmix": "inputAudio",
+          "input": "7",
+          "style": {
+            "bgcolor": "#CC0000",
+            "color": "#FFFFFF"
+          }
+        }
+      ],
+      "size": 14
+    },
+    {
+      "loc": "6/2/6",
+      "kind": "macro",
+      "text": "SOLO 7\n$(vmix:input_7_name)",
+      "bg": "#2B2B1A",
+      "actions": [
+        {
+          "vmix": "solo",
+          "input": "7",
+          "functionID": "Solo"
+        }
+      ],
+      "feedbacks": [
+        {
+          "vmix": "inputSolo",
+          "input": "7",
+          "style": {
+            "bgcolor": "#E0C000",
+            "color": "#000000"
+          }
+        }
+      ],
+      "size": 14
+    },
+    {
+      "loc": "6/1/7",
+      "kind": "macro",
+      "text": "MUTE 8\n$(vmix:input_8_name)",
+      "bg": "#333333",
+      "actions": [
+        {
+          "vmix": "audio",
+          "input": "8",
+          "functionID": "Audio"
+        }
+      ],
+      "feedbacks": [
+        {
+          "vmix": "inputAudio",
+          "input": "8",
+          "style": {
+            "bgcolor": "#CC0000",
+            "color": "#FFFFFF"
+          }
+        }
+      ],
+      "size": 14
+    },
+    {
+      "loc": "6/2/7",
+      "kind": "macro",
+      "text": "SOLO 8\n$(vmix:input_8_name)",
+      "bg": "#2B2B1A",
+      "actions": [
+        {
+          "vmix": "solo",
+          "input": "8",
+          "functionID": "Solo"
+        }
+      ],
+      "feedbacks": [
+        {
+          "vmix": "inputSolo",
+          "input": "8",
+          "style": {
+            "bgcolor": "#E0C000",
+            "color": "#000000"
+          }
+        }
+      ],
+      "size": 14
+    },
+    {
+      "loc": "6/3/0",
+      "kind": "macro",
+      "text": "MASTER\nFADE OUT\n2 s",
+      "bg": "#1D4E57",
+      "actions": [
+        {
+          "vmix": "setBusVolumeFade",
+          "value": "Master",
+          "fadeVol": "0",
+          "fadeTime": "2000"
+        }
+      ],
+      "size": 14
+    },
+    {
+      "loc": "6/3/1",
+      "kind": "macro",
+      "text": "MASTER\nFADE IN\n2 s",
+      "bg": "#1D4E57",
+      "actions": [
+        {
+          "vmix": "setBusVolumeFade",
+          "value": "Master",
+          "fadeVol": "100",
+          "fadeTime": "2000"
+        }
+      ],
+      "size": 14
+    },
+    {
+      "loc": "6/3/2",
+      "kind": "macro",
+      "text": "MASTER\n100 %",
+      "bg": "#1D4E57",
+      "actions": [
+        {
+          "vmix": "setBusVolume",
+          "value": "Master",
+          "adjustment": "Set",
+          "amount": "100"
+        }
+      ]
+    },
+    {
+      "loc": "6/3/3",
+      "kind": "macro",
+      "text": "MASTER\n50 %",
+      "bg": "#1D4E57",
+      "actions": [
+        {
+          "vmix": "setBusVolume",
+          "value": "Master",
+          "adjustment": "Set",
+          "amount": "50"
+        }
+      ]
+    },
+    {
+      "loc": "6/3/4",
+      "kind": "macro",
+      "text": "MASTER\n−10",
+      "bg": "#1D4E57",
+      "actions": [
+        {
+          "vmix": "setBusVolume",
+          "value": "Master",
+          "adjustment": "Decrease",
+          "amount": "10"
+        }
+      ]
+    },
+    {
+      "loc": "6/3/5",
+      "kind": "macro",
+      "text": "MASTER\n+10",
+      "bg": "#1D4E57",
+      "actions": [
+        {
+          "vmix": "setBusVolume",
+          "value": "Master",
+          "adjustment": "Increase",
+          "amount": "10"
+        }
+      ]
+    },
+    {
+      "loc": "6/3/6",
+      "kind": "macro",
+      "text": "BUS A\nFADE OUT",
+      "bg": "#1D4E57",
+      "actions": [
+        {
+          "vmix": "setBusVolumeFade",
+          "value": "A",
+          "fadeVol": "0",
+          "fadeTime": "2000"
+        }
+      ],
+      "size": 14
+    },
+    {
+      "loc": "6/3/7",
+      "kind": "macro",
+      "text": "BUS A\nFADE IN",
+      "bg": "#1D4E57",
+      "actions": [
+        {
+          "vmix": "setBusVolumeFade",
+          "value": "A",
+          "fadeVol": "100",
+          "fadeTime": "2000"
+        }
+      ],
+      "size": 14
+    }
+  ]
+}

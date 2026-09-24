@@ -74,7 +74,7 @@ Avec `sequential: true` (défaut) et plusieurs items, le script les place dans u
 `{ "vmix": "inputLive", "input": "1", "bg": "#CC0000" }`. Pour un feedback booléen (`status`, `busMute`, `inputAudio`, `replayStatus`) : ajouter `"style": { "bgcolor": "#CC0000", "color": "#FFFFFF" }`.
 
 ## Conventions de mise en page
-- Ligne 0 : `⬆️` (page_up) en colonne 0, `⬇️` (page_down) en colonne 1 ; le bouton maître d'une page en colonne 7.
+- Navigation : reprendre l'emplacement de `⬆️` / `⬇️` déjà utilisé dans le fichier de l'utilisateur (lire le `dump`). Par défaut : ligne 0, colonnes 0 et 1 ; certains préfèrent colonnes 6 et 7 (en haut à droite).
 - Toggle : vert foncé `#003300` = actif, rouge `#AA0000` = inactif. Texte `▶ Nom`.
 - vMix : tally preview vert `#009900`, program rouge `#CC0000` (feedbacks `inputPreview` / `inputLive`) ; texte d'une touche d'input `PVW 1\n$(vmix:input_1_name)`.
 - Dans les automatisations vMix, désigner les inputs par leur **nom** plutôt que leur numéro, et dire à l'utilisateur de nommer ses inputs pareil.
@@ -86,6 +86,10 @@ Avec `sequential: true` (défaut) et plusieurs items, le script les place dans u
 |---|---|
 | `examples/generique/api-http.json` | Projet quelconque avec une API HTTP : GET, POST avec corps JSON, toggles, maître, macro avec délai |
 | `examples/vmix/vmix-regie.json` | Pupitre vMix complet : transitions, preview/program avec tally, overlays, REC/stream, mute |
+| `examples/vmix/vmix-audio.json` | Mutes (Master, bus, inputs 1–8), solo 1–8, volumes et fondus du Master |
+| `examples/vmix/vmix-lecture.json` | Lecture de l'input en preview (play, pause, loop, mark, ±1 s/±5 s), playlist, compte à rebours d'un titre `TIMER` |
+| `examples/vmix/vmix-transitions.json` | Auto T1–T4, stingers 3–4, overlays 1–4 in / out / off, T-bar, 8 transitions rapides |
+| `examples/vmix/vmix-sorties.json` | External, Fullscreen, SRT, snapshot, stream par destination, REC, sources de Output 2 / Fullscreen / External 2 |
 | `examples/vmix/vmix-live.json` | Page 2 vMix seul : GO LIVE / FIN LIVE, replay (marquer 10 s, lire, enregistrer), mutes, sorties d'overlays, réglage de la transition 1 |
 | `examples/pso/` | Un projet réel (overlay tournoi PSO) : page d'overlays + automatisations qui mélangent l'API du projet et vMix. Voir son README pour la démarche |
 

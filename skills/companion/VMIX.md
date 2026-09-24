@@ -33,6 +33,20 @@ Relevé dans le code source du module officiel **`studiocoast-vmix` v5.0.5** (gi
 | `replayStopEvents` | — | Stopper le replay |
 | `replayRecording` | `functionID: 'ReplayStartStopRecording'` / `ReplayStartRecording` / `ReplayStopRecording` | Enregistrement du replay |
 | `scriptStart` | `value: 'NomDuScript'` | Lancer un script vMix |
+| `solo` | `input`, `functionID: 'Solo'` / `SoloOn` / `SoloOff` | Solo d'un input |
+| `soloAllOff` · `audioMixerShowHide` | — | Coupe tous les solos · affiche / cache le mixer audio |
+| `setBusVolume` | `value: 'Master'` (A–G, Headphones), `adjustment: 'Set'`/`Increase`/`Decrease`, `amount: '100'` | Volume d'un bus (0–100) |
+| `setBusVolumeFade` | `value: 'Master'`, `fadeVol: '0'`, `fadeTime: '2000'` | Fondu de volume d'un bus (vMix 28+) |
+| `setInputVolume` · `setVolumeFade` | `input`, `adjustment`, `amount` · `input`, `fadeMin`, `fadeTime` | Volume / fondu d'un input |
+| `videoActions` | `input`, `inputType` (true = l'input en preview), `functionID: 'Play'` / `Pause` / `PlayPause` / `Restart` / `Loop`… | Lecture d'une vidéo |
+| `videoPlayhead` | `input`, `inputType`, `adjustment`, `value` (ms) | Déplacer la tête de lecture |
+| `videoMark` | `input`, `inputType`, `functionID: 'MarkIn'` / `MarkOut` / `MarkReset`… | Points d'entrée / sortie d'une vidéo |
+| `playListFunctions` | `functionID: 'StartPlayList'` / `StopPlayList` / `NextPlayListEntry` / `PreviousPlayListEntry` | Playlist |
+| `controlCountdown` | `functionID: 'StartCountdown'` / `PauseCountdown` / `StopCountdown`, `input`, `selectedIndex: '0'` | Compte à rebours d'un titre |
+| `tbar` | `value: '0'`…`'255'` | Position du T-bar |
+| `outputSet` | `functionID: 'SetOutput2'`/`3`/`4`/`SetOutputExternal2`/`SetOutputFullscreen`/`2`, `value: 'Output'`/`Preview`/`MultiView`/`Replay`/`Mix`/`Input` | Source d'une sortie |
+| `fullscreenFunctions` · `srtFunctions` | `functionID` : `Fullscreen` / `FullscreenOn` / `FullscreenOff` · `StartStopSRTOutput`… | Sorties Fullscreen, SRT |
+| `snapshot` | `input: ''` (vide = la sortie), `value` : nom de fichier, ex. `Snapshot {0:yyyy-MM-dd HH-mm-ss}.jpg` | Capture d'image |
 | `command` | `command: 'Fonction Param=…'`, `encode: false` | N'importe quelle fonction de l'API vMix |
 
 ## Feedbacks utiles
@@ -45,6 +59,8 @@ Relevé dans le code source du module officiel **`studiocoast-vmix` v5.0.5** (gi
 | `busMute` | boolean + `style` | `value: 'Master'` | Bus muté |
 | `inputAudio` | boolean + `style` | `input` | Input muté |
 | `replayStatus` | boolean + `style` | `status: 'recording'` / `'live'` | État du replay |
+| `inputSolo` | boolean + `style` | `input` | Input en solo |
+| `inputState` | boolean + `style` | `input`, `type: 'playing'` / `'loop'` | Vidéo en lecture / en boucle |
 
 Les feedbacks *advanced* portent leurs couleurs dans leurs options, les *boolean* dans `style` (`bgcolor`, `color`).
 

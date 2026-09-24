@@ -1,0 +1,320 @@
+{
+  "vmix": {
+    "host": "127.0.0.1",
+    "port": 8099
+  },
+  "pages": {
+    "7": {
+      "name": "vMix Lecture"
+    }
+  },
+  "buttons": [
+    {
+      "loc": "7/0/6",
+      "kind": "page_up"
+    },
+    {
+      "loc": "7/0/7",
+      "kind": "page_down"
+    },
+    {
+      "loc": "7/0/0",
+      "kind": "macro",
+      "text": "▶ PLAY\nPVW",
+      "bg": "#1F5F3A",
+      "actions": [
+        {
+          "vmix": "videoActions",
+          "input": "",
+          "inputType": true,
+          "functionID": "Play"
+        }
+      ]
+    },
+    {
+      "loc": "7/0/1",
+      "kind": "macro",
+      "text": "⏸ PAUSE\nPVW",
+      "bg": "#1F5F3A",
+      "actions": [
+        {
+          "vmix": "videoActions",
+          "input": "",
+          "inputType": true,
+          "functionID": "Pause"
+        }
+      ]
+    },
+    {
+      "loc": "7/0/2",
+      "kind": "macro",
+      "text": "⏯\nPVW",
+      "bg": "#1F5F3A",
+      "actions": [
+        {
+          "vmix": "videoActions",
+          "input": "",
+          "inputType": true,
+          "functionID": "PlayPause"
+        }
+      ]
+    },
+    {
+      "loc": "7/0/3",
+      "kind": "macro",
+      "text": "⏮ RESTART\nPVW",
+      "bg": "#1F5F3A",
+      "actions": [
+        {
+          "vmix": "videoActions",
+          "input": "",
+          "inputType": true,
+          "functionID": "Restart"
+        }
+      ],
+      "size": 14
+    },
+    {
+      "loc": "7/0/4",
+      "kind": "macro",
+      "text": "🔁 LOOP\nPVW",
+      "bg": "#1F5F3A",
+      "actions": [
+        {
+          "vmix": "videoActions",
+          "input": "",
+          "inputType": true,
+          "functionID": "Loop"
+        }
+      ]
+    },
+    {
+      "loc": "7/1/0",
+      "kind": "macro",
+      "text": "MARK\nIN",
+      "bg": "#806200",
+      "actions": [
+        {
+          "vmix": "videoMark",
+          "input": "",
+          "inputType": true,
+          "functionID": "MarkIn"
+        }
+      ]
+    },
+    {
+      "loc": "7/1/1",
+      "kind": "macro",
+      "text": "MARK\nOUT",
+      "bg": "#806200",
+      "actions": [
+        {
+          "vmix": "videoMark",
+          "input": "",
+          "inputType": true,
+          "functionID": "MarkOut"
+        }
+      ]
+    },
+    {
+      "loc": "7/1/2",
+      "kind": "macro",
+      "text": "MARK\nRESET",
+      "bg": "#806200",
+      "actions": [
+        {
+          "vmix": "videoMark",
+          "input": "",
+          "inputType": true,
+          "functionID": "MarkReset"
+        }
+      ]
+    },
+    {
+      "loc": "7/1/3",
+      "kind": "macro",
+      "text": "⇤ DÉBUT",
+      "bg": "#444444",
+      "actions": [
+        {
+          "vmix": "videoPlayhead",
+          "input": "",
+          "inputType": true,
+          "adjustment": "Set",
+          "value": 0
+        }
+      ]
+    },
+    {
+      "loc": "7/1/4",
+      "kind": "macro",
+      "text": "−5 s",
+      "bg": "#444444",
+      "actions": [
+        {
+          "vmix": "videoPlayhead",
+          "input": "",
+          "inputType": true,
+          "adjustment": "Decrease",
+          "value": 5000
+        }
+      ],
+      "size": 18
+    },
+    {
+      "loc": "7/1/5",
+      "kind": "macro",
+      "text": "−1 s",
+      "bg": "#444444",
+      "actions": [
+        {
+          "vmix": "videoPlayhead",
+          "input": "",
+          "inputType": true,
+          "adjustment": "Decrease",
+          "value": 1000
+        }
+      ],
+      "size": 18
+    },
+    {
+      "loc": "7/1/6",
+      "kind": "macro",
+      "text": "+1 s",
+      "bg": "#444444",
+      "actions": [
+        {
+          "vmix": "videoPlayhead",
+          "input": "",
+          "inputType": true,
+          "adjustment": "Increase",
+          "value": 1000
+        }
+      ],
+      "size": 18
+    },
+    {
+      "loc": "7/1/7",
+      "kind": "macro",
+      "text": "+5 s",
+      "bg": "#444444",
+      "actions": [
+        {
+          "vmix": "videoPlayhead",
+          "input": "",
+          "inputType": true,
+          "adjustment": "Increase",
+          "value": 5000
+        }
+      ],
+      "size": 18
+    },
+    {
+      "loc": "7/2/0",
+      "kind": "macro",
+      "text": "PLAYLIST\n▶ START",
+      "bg": "#1F3A5F",
+      "actions": [
+        {
+          "vmix": "playListFunctions",
+          "functionID": "StartPlayList"
+        }
+      ],
+      "feedbacks": [
+        {
+          "vmix": "status",
+          "status": "playList",
+          "style": {
+            "bgcolor": "#CC0000",
+            "color": "#FFFFFF"
+          }
+        }
+      ],
+      "size": 14
+    },
+    {
+      "loc": "7/2/1",
+      "kind": "macro",
+      "text": "PLAYLIST\n■ STOP",
+      "bg": "#1F3A5F",
+      "actions": [
+        {
+          "vmix": "playListFunctions",
+          "functionID": "StopPlayList"
+        }
+      ],
+      "size": 14
+    },
+    {
+      "loc": "7/2/2",
+      "kind": "macro",
+      "text": "PLAYLIST\n⏮ PRÉC.",
+      "bg": "#1F3A5F",
+      "actions": [
+        {
+          "vmix": "playListFunctions",
+          "functionID": "PreviousPlayListEntry"
+        }
+      ],
+      "size": 14
+    },
+    {
+      "loc": "7/2/3",
+      "kind": "macro",
+      "text": "PLAYLIST\n⏭ SUIV.",
+      "bg": "#1F3A5F",
+      "actions": [
+        {
+          "vmix": "playListFunctions",
+          "functionID": "NextPlayListEntry"
+        }
+      ],
+      "size": 14
+    },
+    {
+      "loc": "7/3/0",
+      "kind": "macro",
+      "text": "TIMER\n▶ START",
+      "bg": "#5A2D82",
+      "actions": [
+        {
+          "vmix": "controlCountdown",
+          "functionID": "StartCountdown",
+          "input": "TIMER",
+          "selectedIndex": "0"
+        }
+      ],
+      "size": 14
+    },
+    {
+      "loc": "7/3/1",
+      "kind": "macro",
+      "text": "TIMER\n⏸ PAUSE",
+      "bg": "#5A2D82",
+      "actions": [
+        {
+          "vmix": "controlCountdown",
+          "functionID": "PauseCountdown",
+          "input": "TIMER",
+          "selectedIndex": "0"
+        }
+      ],
+      "size": 14
+    },
+    {
+      "loc": "7/3/2",
+      "kind": "macro",
+      "text": "TIMER\n■ STOP",
+      "bg": "#5A2D82",
+      "actions": [
+        {
+          "vmix": "controlCountdown",
+          "functionID": "StopCountdown",
+          "input": "TIMER",
+          "selectedIndex": "0"
+        }
+      ],
+      "size": 14
+    }
+  ]
+}
