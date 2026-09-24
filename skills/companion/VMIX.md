@@ -47,6 +47,13 @@ Relevé dans le code source du module officiel **`studiocoast-vmix` v5.0.5** (gi
 | `outputSet` | `functionID: 'SetOutput2'`/`3`/`4`/`SetOutputExternal2`/`SetOutputFullscreen`/`2`, `value: 'Output'`/`Preview`/`MultiView`/`Replay`/`Mix`/`Input` | Source d'une sortie |
 | `fullscreenFunctions` · `srtFunctions` | `functionID` : `Fullscreen` / `FullscreenOn` / `FullscreenOff` · `StartStopSRTOutput`… | Sorties Fullscreen, SRT |
 | `snapshot` | `input: ''` (vide = la sortie), `value` : nom de fichier, ex. `Snapshot {0:yyyy-MM-dd HH-mm-ss}.jpg` | Capture d'image |
+| `addInput` | `value: 'TYPE\|CHEMIN'` | Ajoute un input. Types acceptés par vMix : `Video`, `Image`, `Photos` (dossier), `Title` (.gtzip/.gtzx), `VideoList` (.m3u), `Colour` (couleur HTML, ex. `#00B140`), `AudioFile`, `Flash`, `PowerPoint`. **Pas** de Browser, NDI ni caméra : les créer une fois dans vMix puis piloter leur source |
+| `removeInput` · `setInputName` · `createVirtualInput` | `input` (+ `value` : nouveau nom) | Supprime, renomme, crée une copie virtuelle d'un input |
+| `undo` | — | Rouvre le dernier input fermé |
+| `previewInputNext` · `previewInputPrevious` | — | Input suivant / précédent en preview (un input ajouté arrive en dernier) |
+| `browserNavigate` | `input`, `value` (URL), `encode: false` | Change la page d'un input Browser |
+| `browser` | `input`, `functionID: 'BrowserReload'` / `BrowserBack` / `BrowserForward` / `BrowserMouseEnabled`… | Commandes d'un input Browser |
+| `ndiSelectSource` | `input`, `value` (nom exact de la source NDI, ou son numéro) | Change la source d'un input NDI |
 | `command` | `command: 'Fonction Param=…'`, `encode: false` | N'importe quelle fonction de l'API vMix |
 
 ## Feedbacks utiles

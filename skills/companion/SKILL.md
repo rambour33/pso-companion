@@ -48,6 +48,12 @@ Les chemins `scripts/…` et `examples/…` sont relatifs au dossier de ce skill
   ]
 }
 ```
+`custom_variables` (optionnel) déclare des variables Companion réglables par l'utilisateur dans Companion (onglet Variables), utilisables partout avec `$(custom:nom)` :
+```json
+"custom_variables": { "vmix_video": { "description": "Vidéo à ajouter", "default": "C:\\Medias\\video.mp4" } }
+```
+Elles sont créées si absentes, jamais écrasées. Idéal pour un chemin de fichier, une URL ou un nom de source qui change d'un événement à l'autre : on ne régénère pas le fichier, on change la variable. À l'import, penser à cocher les variables personnalisées.
+
 `http` et `vmix` sont optionnels : sans `http.base_url`, le script utilise la connexion `generic-http` déjà présente (celle dont le label vaut `http.label`, sinon la première).
 
 ### Types de touches (`kind`)
@@ -90,6 +96,7 @@ Avec `sequential: true` (défaut) et plusieurs items, le script les place dans u
 | `examples/vmix/vmix-lecture.json` | Lecture de l'input en preview (play, pause, loop, mark, ±1 s/±5 s), playlist, compte à rebours d'un titre `TIMER` |
 | `examples/vmix/vmix-transitions.json` | Auto T1–T4, stingers 3–4, overlays 1–4 in / out / off, T-bar, 8 transitions rapides |
 | `examples/vmix/vmix-sorties.json` | External, Fullscreen, SRT, snapshot, stream par destination, REC, sources de Output 2 / Fullscreen / External 2 |
+| `examples/vmix/vmix-sources.json` | Ajouter des sources (vidéo, image, photos, titre, playlist, audio, couleurs, PowerPoint) via variables personnalisées ; changer l'URL d'un input Browser et la source d'un input NDI ; annuler une fermeture |
 | `examples/vmix/vmix-live.json` | Page 2 vMix seul : GO LIVE / FIN LIVE, replay (marquer 10 s, lire, enregistrer), mutes, sorties d'overlays, réglage de la transition 1 |
 | `examples/pso/` | Un projet réel (overlay tournoi PSO) : page d'overlays + automatisations qui mélangent l'API du projet et vMix. Voir son README pour la démarche |
 

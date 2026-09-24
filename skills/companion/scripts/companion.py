@@ -206,6 +206,17 @@ VMIX_ACTIONS = {
     'videoMark':               {'input': '1', 'inputType': False, 'functionID': 'MarkIn'},
     'playListFunctions':       {'functionID': 'StartPlayList'},
     'controlCountdown':        {'functionID': 'StartCountdown', 'input': '1', 'selectedIndex': '0'},
+    # Sources : AddInput accepte Video, Image, Photos, Title, VideoList, Colour, AudioFile, Flash, PowerPoint
+    'addInput':                {'value': 'TYPE|FILENAME'},
+    'removeInput':             {'input': '1'},
+    'setInputName':            {'input': '1', 'value': ''},
+    'createVirtualInput':      {'input': '1'},
+    'undo':                    {},
+    'previewInputNext':        {},
+    'previewInputPrevious':    {},
+    'browser':                 {'input': '1', 'functionID': 'BrowserReload'},
+    'browserNavigate':         {'input': '1', 'value': '', 'encode': False},
+    'ndiSelectSource':         {'input': '1', 'value': ''},
     # Général / sorties
     'tbar':                    {'value': '0'},
     'outputSet':               {'functionID': 'SetOutput2', 'value': 'Output', 'mix': 1, 'input': '1'},
@@ -456,6 +467,15 @@ def cmd_apply(cfg_path, spec_path, dry_run, out_path=None):
         return cache['vmix']
 
     conns = {'http': http, 'vmix': vmix}
+
+    # Variables personnalisées ($(custom:nom)) : créées si absentes, jamais écrasées (l'utilisateur les règle dans Companion).
+    cvars = data.setdefault('custom_variables', {})
+    for name, v in spec.get('custom_variables', {}).items():
+        if name not in cvars:
+            cvars[name] = {'description': v.get('description', ''), 'defaultValue': v.get('default', ''),
+                           'persistCurrentValue': True,
+                           'sortOrder': max([c.get('sortOrder', 0) for c in cvars.values()] or [-1]) + 1}
+            print(f"+ variable $(custom:{name})")
 
     for num, p in spec.get('pages', {}).items():
         ensure_page(data, str(num), p.get('name'))

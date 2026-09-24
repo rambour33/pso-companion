@@ -1,0 +1,47 @@
+{
+  "vmix": { "host": "127.0.0.1", "port": 8099 },
+  "custom_variables": {
+    "vmix_video":    { "description": "vMix : chemin de la vidéo à ajouter (touche + VIDÉO)",            "default": "C:\\Medias\\video.mp4" },
+    "vmix_image":    { "description": "vMix : chemin de l'image à ajouter (touche + IMAGE)",             "default": "C:\\Medias\\image.png" },
+    "vmix_photos":   { "description": "vMix : dossier de photos pour un diaporama (touche + PHOTOS)",    "default": "C:\\Medias\\Photos" },
+    "vmix_titre":    { "description": "vMix : fichier de titre .gtzip / .gtzx (touche + TITRE)",         "default": "C:\\Medias\\titre.gtzip" },
+    "vmix_playlist": { "description": "vMix : playlist .m3u (touche + PLAYLIST)",                        "default": "C:\\Medias\\playlist.m3u" },
+    "vmix_audio":    { "description": "vMix : fichier audio à ajouter (touche + AUDIO)",                 "default": "C:\\Medias\\musique.mp3" },
+    "vmix_ppt":      { "description": "vMix : présentation PowerPoint (touche + POWERPOINT)",            "default": "C:\\Medias\\presentation.pptx" },
+    "vmix_couleur":  { "description": "vMix : couleur HTML de la touche + COULEUR (ex. #FF6600 ou Orange)", "default": "#FF6600" },
+    "vmix_url_1":    { "description": "vMix : page web n°1 pour l'input Browser nommé WEB",              "default": "https://www.twitch.tv" },
+    "vmix_url_2":    { "description": "vMix : page web n°2 pour l'input Browser nommé WEB",              "default": "https://www.youtube.com" },
+    "vmix_ndi_1":    { "description": "vMix : source NDI n°1 pour l'input NDI nommé NDI (nom exact, ex. PC-STREAM (OBS))", "default": "" },
+    "vmix_ndi_2":    { "description": "vMix : source NDI n°2 pour l'input NDI nommé NDI",                "default": "" }
+  },
+  "pages": { "10": { "name": "vMix Sources" } },
+  "buttons": [
+    { "loc": "10/0/6", "kind": "page_up" },
+    { "loc": "10/0/7", "kind": "page_down" },
+
+    { "loc": "10/0/0", "kind": "macro", "text": "+ VIDÉO",      "bg": "#1F5F3A", "actions": [ { "vmix": "addInput", "value": "Video|$(custom:vmix_video)" } ] },
+    { "loc": "10/0/1", "kind": "macro", "text": "+ IMAGE",      "bg": "#1F5F3A", "actions": [ { "vmix": "addInput", "value": "Image|$(custom:vmix_image)" } ] },
+    { "loc": "10/0/2", "kind": "macro", "text": "+ PHOTOS",     "bg": "#1F5F3A", "actions": [ { "vmix": "addInput", "value": "Photos|$(custom:vmix_photos)" } ] },
+    { "loc": "10/0/3", "kind": "macro", "text": "+ TITRE",      "bg": "#1F5F3A", "actions": [ { "vmix": "addInput", "value": "Title|$(custom:vmix_titre)" } ] },
+    { "loc": "10/0/4", "kind": "macro", "text": "+ PLAYLIST",   "bg": "#1F5F3A", "size": 14, "actions": [ { "vmix": "addInput", "value": "VideoList|$(custom:vmix_playlist)" } ] },
+    { "loc": "10/0/5", "kind": "macro", "text": "+ AUDIO",      "bg": "#1F5F3A", "actions": [ { "vmix": "addInput", "value": "AudioFile|$(custom:vmix_audio)" } ] },
+
+    { "loc": "10/1/0", "kind": "macro", "text": "+ NOIR",       "bg": "#000000", "actions": [ { "vmix": "addInput", "value": "Colour|#000000" } ] },
+    { "loc": "10/1/1", "kind": "macro", "text": "+ BLANC",      "bg": "#DDDDDD", "fg": "#000000", "actions": [ { "vmix": "addInput", "value": "Colour|#FFFFFF" } ] },
+    { "loc": "10/1/2", "kind": "macro", "text": "+ VERT\nCHROMA", "bg": "#00B140", "fg": "#000000", "size": 14, "actions": [ { "vmix": "addInput", "value": "Colour|#00B140" } ] },
+    { "loc": "10/1/3", "kind": "macro", "text": "+ BLEU\nCHROMA", "bg": "#0047BB", "size": 14, "actions": [ { "vmix": "addInput", "value": "Colour|#0047BB" } ] },
+    { "loc": "10/1/4", "kind": "macro", "text": "+ COULEUR\n$(custom:vmix_couleur)", "bg": "#806200", "size": 14, "actions": [ { "vmix": "addInput", "value": "Colour|$(custom:vmix_couleur)" } ] },
+    { "loc": "10/1/5", "kind": "macro", "text": "+ POWER\nPOINT",  "bg": "#1F5F3A", "actions": [ { "vmix": "addInput", "value": "PowerPoint|$(custom:vmix_ppt)" } ] },
+
+    { "loc": "10/2/0", "kind": "macro", "text": "WEB\n→ URL 1",  "bg": "#1D4E57", "actions": [ { "vmix": "browserNavigate", "input": "WEB", "value": "$(custom:vmix_url_1)" } ] },
+    { "loc": "10/2/1", "kind": "macro", "text": "WEB\n→ URL 2",  "bg": "#1D4E57", "actions": [ { "vmix": "browserNavigate", "input": "WEB", "value": "$(custom:vmix_url_2)" } ] },
+    { "loc": "10/2/2", "kind": "macro", "text": "WEB\n⟳ RELOAD", "bg": "#1D4E57", "actions": [ { "vmix": "browser", "input": "WEB", "functionID": "BrowserReload" } ] },
+    { "loc": "10/2/4", "kind": "macro", "text": "NDI\n→ SOURCE 1", "bg": "#5A2D82", "size": 14, "actions": [ { "vmix": "ndiSelectSource", "input": "NDI", "value": "$(custom:vmix_ndi_1)" } ] },
+    { "loc": "10/2/5", "kind": "macro", "text": "NDI\n→ SOURCE 2", "bg": "#5A2D82", "size": 14, "actions": [ { "vmix": "ndiSelectSource", "input": "NDI", "value": "$(custom:vmix_ndi_2)" } ] },
+
+    { "loc": "10/3/0", "kind": "macro", "text": "↶ ANNULER\nFERMETURE", "bg": "#444444", "size": 14, "actions": [ { "vmix": "undo" } ] },
+    { "loc": "10/3/1", "kind": "macro", "text": "◀ PVW\nPRÉC.",  "bg": "#444444", "actions": [ { "vmix": "previewInputPrevious" } ] },
+    { "loc": "10/3/2", "kind": "macro", "text": "PVW ▶\nSUIV.",  "bg": "#444444", "actions": [ { "vmix": "previewInputNext" } ] },
+    { "loc": "10/3/4", "kind": "macro", "text": "⧉ COPIE\nVIRT. IN 1", "bg": "#444444", "size": 14, "actions": [ { "vmix": "createVirtualInput", "input": "1" } ] }
+  ]
+}
