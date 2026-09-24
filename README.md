@@ -1,15 +1,17 @@
-# PSO Companion
+# pso-companion
 
-Skills Claude Code et serveur local pour la régie PSO : construction des boutons **Bitfocus Companion** (Stream Deck) qui pilotent l'overlay PSO (`http://localhost:3002/api/deck/...`) et **vMix** (module `studiocoast-vmix` v5), avec leur documentation.
+Skills Claude Code et serveur local pour les distribuer. Le skill **companion** fabrique des touches **Bitfocus Companion** (Stream Deck) pour n'importe quel projet : appels à une API HTTP, toggles, boutons maîtres, enchaînements avec délais, pupitre **vMix** avec tally.
 
 ## Contenu
 | Chemin | Rôle |
 |---|---|
 | `skills/<nom>/` | Un dossier par skill (avec son `SKILL.md`) |
-| `skills/companion/SKILL.md` | Instructions du skill companion |
+| `skills/companion/SKILL.md` | Instructions du skill : méthode, format des specs, conventions |
 | `skills/companion/VMIX.md` | Référence des actions / feedbacks vMix (relevée dans le code du module) |
-| `skills/companion/scripts/companion.py` | Outil `dump` / `apply` pour lire et générer les boutons |
-| `skills/companion/examples/` | `spec.json` (page PSO) et `vmix-spec.json` (pages « vMix Régie » et « vMix Auto ») |
+| `skills/companion/scripts/companion.py` | Outil `init` / `dump` / `apply` |
+| `skills/companion/examples/generique/` | Projet quelconque avec une API HTTP |
+| `skills/companion/examples/vmix/` | Pupitre vMix réutilisable |
+| `skills/companion/examples/pso/` | Exemple réel complet : régie de tournoi PSO (API maison + vMix) |
 | `server.js` · `start.bat` · `config.json` | Serveur local de skills et de documentation (port 3011) |
 | `public/` | Catalogue des skills (`/`) et documentation (`/docs`) |
 
@@ -26,32 +28,34 @@ Le serveur écoute sur toutes les interfaces et affiche ses adresses au démarra
 | `/download/skills/<nom>.zip` | Le skill, prêt à décompresser dans `.claude\skills` |
 | `/api/skills` · `/api/exports` · `/api/info` | Données JSON |
 
-`config.json` règle le port et le dossier des exports `.companionconfig` proposés au téléchargement. Le serveur est en lecture seule, sans authentification : à réserver au réseau local.
+`config.json` :
+```json
+{ "port": 3011, "exportsDirs": [] }
+```
+`exportsDirs` liste les dossiers de tes projets dont les fichiers `.companionconfig` sont proposés au téléchargement, par exemple `["D:/MonProjet/companion"]`.
 
-Ajouter un skill : créer `skills/<nom>/SKILL.md` avec un en-tête `name:` / `description:`. Il apparaît dans le catalogue sans redémarrer.
+Le serveur est en lecture seule, sans authentification : à réserver au réseau local. Ajouter un skill : créer `skills/<nom>/SKILL.md` avec un en-tête `name:` / `description:` ; il apparaît dans le catalogue sans redémarrer.
 
 ## Installer le skill companion
-Depuis n'importe quel PC du réseau (remplacer l'IP) :
+Depuis n'importe quel PC du réseau (remplacer l'IP), pour tous tes projets :
 ```powershell
 Invoke-WebRequest http://192.168.1.105:3011/download/skills/companion.zip -OutFile "$env:TEMP\companion.zip"
-Expand-Archive "$env:TEMP\companion.zip" -DestinationPath "P:\PSO 2\.claude\skills" -Force
+Expand-Archive "$env:TEMP\companion.zip" -DestinationPath "$env:USERPROFILE\.claude\skills" -Force
 ```
-Ou pour tous les projets : `-DestinationPath "$env:USERPROFILE\.claude\skills"`.
+Pour un seul projet : `-DestinationPath "<projet>\.claude\skills"`.
 
-Ensuite, dans Claude Code : `/companion` ou « ajoute un bouton Stream Deck pour le bracket ».
+Ensuite, dans Claude Code ouvert sur ton projet : `/companion` ou « crée une page Stream Deck pour piloter l'API de ce projet ».
 
 ## Utilisation directe du script
 ```powershell
-$py = "skills\companion\scripts\companion.py"
+$py = "$env:USERPROFILE\.claude\skills\companion\scripts\companion.py"
 
-# Voir les boutons existants
-python $py dump "P:\PSO 2\PSO\companion\PSO-Companion (19).companionconfig"
-
-# Générer les pages vMix dans un nouveau fichier (l'original n'est pas modifié)
-python $py apply "P:\PSO 2\PSO\companion\PSO-Companion (19).companionconfig" skills\companion\examples\vmix-spec.json --server "P:\PSO 2\PSO\server.js" --out "P:\PSO 2\PSO\companion\PSO-Companion-vMix.companionconfig"
+python $py init  D:\MonProjet\companion.companionconfig                 # fichier neuf
+python $py dump  D:\MonProjet\export.companionconfig                    # voir les touches
+python $py apply D:\MonProjet\companion.companionconfig ma-spec.json --out D:\MonProjet\resultat.companionconfig
 ```
-Après `apply`, réimporter le fichier dans Companion (Import/Export → Import). La connexion vMix (`127.0.0.1:8099`) est ajoutée si elle n'existe pas ; changer `vmix_host` dans la spec si vMix tourne sur un autre PC.
+Puis importer le résultat dans Companion (Import / Export) en ne choisissant **que** les pages et connexions concernées : un import complet en « tout remplacer » peut laisser le Stream Deck noir.
 
 ## Prérequis
-- Node.js (serveur) et Python 3.8+ (script)
-- Companion 4.3+ avec une connexion `generic-http` (préfixe `http://localhost:3002`)
+- Python 3.8+ (script) et Node.js (serveur de skills)
+- Companion 4.3+ ; les modules `generic-http` et `studiocoast-vmix` s'installent à l'import si besoin

@@ -1,0 +1,257 @@
+{
+  "http": {
+    "label": "http",
+    "base_url": "http://localhost:3002"
+  },
+  "pages": {
+    "1": {
+      "name": "PSO"
+    }
+  },
+  "buttons": [
+    {
+      "loc": "1/0/0",
+      "kind": "page_up"
+    },
+    {
+      "loc": "1/0/1",
+      "kind": "page_down"
+    },
+    {
+      "loc": "1/0/2",
+      "kind": "get",
+      "text": "+1\nJ1",
+      "url": "/api/deck/score/p1/inc",
+      "bg": "#AA0000",
+      "size": 18
+    },
+    {
+      "loc": "1/0/3",
+      "kind": "get",
+      "text": "-1\nJ1",
+      "url": "/api/deck/score/p1/dec",
+      "bg": "#660000",
+      "size": 18
+    },
+    {
+      "loc": "1/0/4",
+      "kind": "get",
+      "text": "RESET\n0/0",
+      "url": "/api/deck/score/reset",
+      "bg": "#806200",
+      "size": 14
+    },
+    {
+      "loc": "1/0/5",
+      "kind": "get",
+      "text": "-1\nJ2",
+      "url": "/api/deck/score/p2/dec",
+      "bg": "#000066",
+      "size": 18
+    },
+    {
+      "loc": "1/0/6",
+      "kind": "get",
+      "text": "+1\nJ2",
+      "url": "/api/deck/score/p2/inc",
+      "bg": "#0000AA",
+      "size": 18
+    },
+    {
+      "loc": "1/1/0",
+      "kind": "toggle",
+      "text": "▶ Score-\nboard",
+      "on_url": "/api/deck/scoreboard/show",
+      "off_url": "/api/deck/scoreboard/hide"
+    },
+    {
+      "loc": "1/1/1",
+      "kind": "toggle",
+      "text": "▶ Casters",
+      "on_url": "/api/deck/casters/show",
+      "off_url": "/api/deck/casters/hide"
+    },
+    {
+      "loc": "1/1/2",
+      "kind": "toggle",
+      "text": "▶ Next\nMatch",
+      "on_url": "/api/deck/nextmatch/show",
+      "off_url": "/api/deck/nextmatch/hide"
+    },
+    {
+      "loc": "1/1/3",
+      "kind": "toggle",
+      "text": "▶ VS\nScreen",
+      "on_url": "/api/deck/vs-screen/show",
+      "off_url": "/api/deck/vs-screen/hide",
+      "on_color": "#0A1A3A"
+    },
+    {
+      "loc": "1/1/4",
+      "kind": "toggle",
+      "text": "▶ Victoire",
+      "on_url": "/api/deck/victory/show",
+      "off_url": "/api/deck/victory/hide"
+    },
+    {
+      "loc": "1/1/5",
+      "kind": "toggle",
+      "text": "▶ Cam",
+      "on_url": "/api/deck/cam/show",
+      "off_url": "/api/deck/cam/hide"
+    },
+    {
+      "loc": "1/1/6",
+      "kind": "toggle",
+      "text": "▶ Veto",
+      "on_url": "/api/deck/stageveto/show",
+      "off_url": "/api/deck/stageveto/hide"
+    },
+    {
+      "loc": "1/1/7",
+      "kind": "toggle",
+      "text": "▶ Timer",
+      "on_url": "/api/deck/timer/show",
+      "off_url": "/api/deck/timer/hide"
+    },
+    {
+      "loc": "1/2/0",
+      "kind": "toggle",
+      "text": "▶ H2H",
+      "on_url": "/api/deck/h2h/show",
+      "off_url": "/api/deck/h2h/hide"
+    },
+    {
+      "loc": "1/2/1",
+      "kind": "toggle",
+      "text": "▶ Stats",
+      "on_url": "/api/deck/player-stats/show",
+      "off_url": "/api/deck/player-stats/hide"
+    },
+    {
+      "loc": "1/2/2",
+      "kind": "toggle",
+      "text": "▶ Bracket",
+      "on_url": "/api/deck/bracket/show",
+      "off_url": "/api/deck/bracket/hide"
+    },
+    {
+      "loc": "1/2/3",
+      "kind": "toggle",
+      "text": "▶ Top 8",
+      "on_url": "/api/deck/top8/show",
+      "off_url": "/api/deck/top8/hide"
+    },
+    {
+      "loc": "1/2/4",
+      "kind": "toggle",
+      "text": "▶ Ticker",
+      "on_url": "/api/deck/ticker/show",
+      "off_url": "/api/deck/ticker/hide"
+    },
+    {
+      "loc": "1/2/5",
+      "kind": "toggle",
+      "text": "▶ Frames",
+      "on_url": "/api/deck/frames/show",
+      "off_url": "/api/deck/frames/hide"
+    },
+    {
+      "loc": "1/2/6",
+      "kind": "toggle",
+      "text": "▶ Titre",
+      "on_url": "/api/deck/stream-title/show",
+      "off_url": "/api/deck/stream-title/hide"
+    },
+    {
+      "loc": "1/2/7",
+      "kind": "toggle",
+      "text": "▶ Chat\nCombiné",
+      "on_url": "/api/deck/combined-chat/show",
+      "off_url": "/api/deck/combined-chat/hide"
+    },
+    {
+      "loc": "1/3/0",
+      "kind": "toggle",
+      "text": "▶ Histori-\nque",
+      "on_url": "/api/deck/tournament-history/show",
+      "off_url": "/api/deck/tournament-history/hide"
+    },
+    {
+      "loc": "1/3/1",
+      "kind": "toggle",
+      "text": "▶ Prochains\nmatchs",
+      "on_url": "/api/deck/upcoming/show",
+      "off_url": "/api/deck/upcoming/hide"
+    },
+    {
+      "loc": "1/3/2",
+      "kind": "toggle",
+      "text": "▶ TW\nChat",
+      "on_url": "/api/deck/twitch-chat/show",
+      "off_url": "/api/deck/twitch-chat/hide"
+    },
+    {
+      "loc": "1/3/3",
+      "kind": "toggle",
+      "text": "▶ TW\nViewer",
+      "on_url": "/api/deck/twitch-viewer/show",
+      "off_url": "/api/deck/twitch-viewer/hide"
+    },
+    {
+      "loc": "1/3/4",
+      "kind": "toggle",
+      "text": "▶ YT\nChat",
+      "on_url": "/api/deck/youtube-chat/show",
+      "off_url": "/api/deck/youtube-chat/hide"
+    },
+    {
+      "loc": "1/0/7",
+      "kind": "master",
+      "text": "▶ Overlays",
+      "targets": [
+        "1/1/0",
+        "1/1/1",
+        "1/1/2",
+        "1/1/3",
+        "1/1/4",
+        "1/1/5",
+        "1/1/6",
+        "1/1/7",
+        "1/2/0",
+        "1/2/1",
+        "1/2/2",
+        "1/2/3",
+        "1/2/4",
+        "1/2/5",
+        "1/2/6",
+        "1/2/7",
+        "1/3/0",
+        "1/3/1",
+        "1/3/2",
+        "1/3/3",
+        "1/3/4"
+      ]
+    },
+    {
+      "loc": "1/4/0",
+      "kind": "empty"
+    },
+    {
+      "loc": "1/4/1",
+      "kind": "empty"
+    },
+    {
+      "loc": "1/4/2",
+      "kind": "empty"
+    },
+    {
+      "loc": "1/4/3",
+      "kind": "empty"
+    },
+    {
+      "loc": "1/5/0",
+      "kind": "empty"
+    }
+  ]
+}

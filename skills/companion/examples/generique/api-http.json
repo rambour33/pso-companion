@@ -1,0 +1,110 @@
+{
+  "http": {
+    "label": "mon-app",
+    "base_url": "http://localhost:8080"
+  },
+  "pages": {
+    "1": {
+      "name": "Mon projet"
+    }
+  },
+  "buttons": [
+    {
+      "loc": "1/0/0",
+      "kind": "page_up"
+    },
+    {
+      "loc": "1/0/1",
+      "kind": "page_down"
+    },
+    {
+      "loc": "1/0/2",
+      "kind": "get",
+      "text": "Recharger",
+      "url": "/api/reload",
+      "bg": "#333333"
+    },
+    {
+      "loc": "1/0/3",
+      "kind": "macro",
+      "text": "Envoyer\nmessage",
+      "bg": "#1F3A5F",
+      "actions": [
+        {
+          "post": "/api/messages",
+          "body": {
+            "text": "Pause de 5 minutes",
+            "level": "info"
+          }
+        }
+      ]
+    },
+    {
+      "loc": "1/1/0",
+      "kind": "toggle",
+      "text": "▶ Bandeau",
+      "on_url": "/api/banner/on",
+      "off_url": "/api/banner/off"
+    },
+    {
+      "loc": "1/1/1",
+      "kind": "toggle",
+      "text": "▶ Logo",
+      "on_url": "/api/logo/on",
+      "off_url": "/api/logo/off",
+      "start_off": true
+    },
+    {
+      "loc": "1/1/2",
+      "kind": "toggle",
+      "text": "▶ Minuteur",
+      "on": [
+        {
+          "post": "/api/timer",
+          "body": {
+            "action": "start",
+            "seconds": 300
+          }
+        }
+      ],
+      "off": [
+        {
+          "post": "/api/timer",
+          "body": {
+            "action": "stop"
+          }
+        }
+      ]
+    },
+    {
+      "loc": "1/1/7",
+      "kind": "master",
+      "text": "▶ Tout",
+      "targets": [
+        "1/1/0",
+        "1/1/1",
+        "1/1/2"
+      ]
+    },
+    {
+      "loc": "1/2/0",
+      "kind": "macro",
+      "text": "▶ INTRO",
+      "bg": "#006600",
+      "actions": [
+        {
+          "get": "/api/banner/off"
+        },
+        {
+          "get": "/api/intro/play"
+        },
+        {
+          "wait": 8000
+        },
+        {
+          "get": "/api/banner/on"
+        }
+      ]
+    }
+  ]
+}

@@ -11,8 +11,9 @@ const { marked } = require('marked');
 const ROOT       = __dirname;
 const SKILLS_DIR = path.join(ROOT, 'skills');
 const CONFIG     = JSON.parse(fs.readFileSync(path.join(ROOT, 'config.json'), 'utf8'));
-const PORT       = process.env.PORT || CONFIG.port || 3011;
-const EXPORTS_DIR = CONFIG.exportsDir ? path.resolve(CONFIG.exportsDir) : null;
+const PORT       = Number(process.env.PORT || CONFIG.port || 3011);
+// Dossiers de fichiers .companionconfig proposés au téléchargement (un par projet, optionnels).
+const EXPORTS_DIRS = (CONFIG.exportsDirs || []).map(d => path.resolve(d));
 
 const app = express();
 app.use(express.static(path.join(ROOT, 'public')));
@@ -160,7 +161,7 @@ function zipSkill(id) {
 // ─── API ─────────────────────────────────────────────────────────────────────
 
 app.get('/api/info', (req, res) => {
-  res.json({ port: PORT, ips: getLocalIPs(), hostname: os.hostname(), exportsDir: EXPORTS_DIR });
+  res.json({ port: PORT, ips: getLocalIPs(), hostname: os.hostname(), exportsDirs: EXPORTS_DIRS });
 });
 
 app.get('/api/skills', (req, res) => res.json(listSkills()));
@@ -181,15 +182,15 @@ app.get('/api/skills/:id/file', (req, res) => {
 });
 
 app.get('/api/exports', (req, res) => {
-  if (!EXPORTS_DIR || !fs.existsSync(EXPORTS_DIR)) return res.json([]);
-  const files = fs.readdirSync(EXPORTS_DIR)
-    .filter(f => f.endsWith('.companionconfig'))
-    .map(f => {
-      const st = fs.statSync(path.join(EXPORTS_DIR, f));
-      return { name: f, size: st.size, mtime: st.mtimeMs };
-    })
-    .sort((a, b) => b.mtime - a.mtime);
-  res.json(files);
+  const files = [];
+  EXPORTS_DIRS.forEach((dir, i) => {
+    if (!fs.existsSync(dir)) return;
+    for (const f of fs.readdirSync(dir).filter(f => f.endsWith('.companionconfig'))) {
+      const st = fs.statSync(path.join(dir, f));
+      files.push({ dir: i, folder: dir, name: f, size: st.size, mtime: st.mtimeMs });
+    }
+  });
+  res.json(files.sort((a, b) => b.mtime - a.mtime));
 });
 
 // ─── Téléchargements ─────────────────────────────────────────────────────────
@@ -212,8 +213,9 @@ app.get('/download/skills/:id/file', (req, res) => {
   res.download(file);
 });
 
-app.get('/download/exports/:name', (req, res) => {
-  const file = EXPORTS_DIR && safeJoin(EXPORTS_DIR, req.params.name);
+app.get('/download/exports/:dir/:name', (req, res) => {
+  const dir = EXPORTS_DIRS[Number(req.params.dir)];
+  const file = dir && safeJoin(dir, req.params.name);
   if (!file || !file.endsWith('.companionconfig') || !fs.existsSync(file))
     return res.status(404).send('Export introuvable');
   res.download(file);
@@ -241,7 +243,7 @@ const server = app.listen(PORT, '0.0.0.0', () => {
   }
   console.log('');
   console.log(`  ${listSkills().length} skill(s) dans ${SKILLS_DIR}`);
-  if (EXPORTS_DIR) console.log(`  Exports Companion : ${EXPORTS_DIR}`);
+  EXPORTS_DIRS.forEach(d => console.log(`  Exports Companion : ${d}`));
   console.log('');
 });
 

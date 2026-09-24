@@ -48,7 +48,7 @@ Relevé dans le code source du module officiel **`studiocoast-vmix` v5.0.5** (gi
 Les feedbacks *advanced* portent leurs couleurs dans leurs options, les *boolean* dans `style` (`bgcolor`, `color`).
 
 ## Enchaîner des actions
-Les actions d'un bouton partent **en même temps** par défaut. Pour une vraie séquence (stinger, puis attendre, puis overlay PSO), le script les place dans une action interne **`action_group`** avec `execution_mode: 'sequential'` et des actions **`wait`** (`time` en ms). C'est le comportement de `"kind": "macro"` avec `"sequential": true` (défaut).
+Les actions d'un bouton partent **en même temps** par défaut. Pour une vraie séquence (stinger vMix, puis attendre, puis appel à l'API de ton projet), le script les place dans une action interne **`action_group`** avec `execution_mode: 'sequential'` et des actions **`wait`** (`time` en ms). C'est le comportement de `"kind": "macro"` avec `"sequential": true` (défaut).
 
 ## Variables pratiques
 - `$(vmix:input_1_name)` : nom de l'input 1 (à mettre dans le texte d'une touche)

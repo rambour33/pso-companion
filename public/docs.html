@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>PSO Companion · Documentation</title>
+<title>Skills Companion · Documentation</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
@@ -170,18 +170,18 @@ footer{max-width:1180px;margin:64px auto 0;padding-top:20px;border-top:1px solid
 <style>.topbar{margin-bottom:0}</style>
 </head>
 <body>
-<header class="topbar"><a class="brand" href="/">PSO Companion</a><nav><a href="/">Skills</a><a href="/docs" aria-current="page">Documentation</a></nav></header>
+<header class="topbar"><a class="brand" href="/">Skills Companion</a><nav><a href="/">Skills</a><a href="/docs" aria-current="page">Documentation</a></nav></header>
 
 
 <header class="masthead">
-  <div class="eyebrow">Stream Deck XL · Companion 4.3 · vMix · overlay PSO</div>
-  <h1>Manuel régie PSO Companion</h1>
-  <p>Comment les touches du Stream Deck pilotent l'overlay PSO et vMix, ce que contient le dépôt <code>pso-companion</code>, et la mise en place pas à pas.</p>
+  <div class="eyebrow">Stream Deck · Companion 4.3 · API HTTP · vMix</div>
+  <h1>Manuel du skill Companion</h1>
+  <p>Comment Claude fabrique les touches de ton Stream Deck pour n'importe quel projet : ce que contient le skill, comment l'installer, écrire une spec et importer le résultat. Avec un exemple réel complet, la régie PSO.</p>
   <div class="chips">
     <span class="chip">github.com/rambour33/pso-companion</span>
+    <span class="chip">Companion 4.3+</span>
+    <span class="chip">module generic-http</span>
     <span class="chip">module studiocoast-vmix v5.0.5</span>
-    <span class="chip">serveur PSO : localhost:3002</span>
-    <span class="chip">vMix TCP : 8099</span>
     <span class="chip">serveur de skills : port 3011</span>
   </div>
 </header>
@@ -193,9 +193,10 @@ footer{max-width:1180px;margin:64px auto 0;padding-top:20px;border-top:1px solid
     <a href="#fichiers">Les fichiers</a>
     <a href="#serveur">Serveur de skills</a>
     <a href="#tuto">Mise en place</a>
-    <a href="#pages">Les pages du deck</a>
-    <a href="#boutons">Types de boutons</a>
-    <a href="#claude">Créer des boutons</a>
+    <a href="#boutons">Types de touches</a>
+    <a href="#claude">Écrire une spec</a>
+    <a href="#pages">Exemples en images</a>
+    <a href="#pso">Exemple : régie PSO</a>
     <a href="#vmix">Référence vMix</a>
     <a href="#depannage">Dépannage</a>
     <a href="#glossaire">Glossaire</a>
@@ -205,52 +206,53 @@ footer{max-width:1180px;margin:64px auto 0;padding-top:20px;border-top:1px solid
     <!-- PRINCIPE -->
     <section id="principe">
       <h2>Le principe</h2>
-      <p class="lead">Le Stream Deck ne sait rien faire tout seul. Chaque touche est configurée dans <b>Companion</b>, qui envoie un ordre au bon logiciel au moment où tu appuies.</p>
-      <div class="flow" role="img" aria-label="Le Stream Deck est relié à Companion, qui envoie des requêtes HTTP au serveur PSO et des commandes TCP à vMix">
-        <div class="node src"><b>Stream Deck XL</b><small>32 touches (8 × 4). Une page = un jeu de 32 touches. ⬆️ ⬇️ changent de page.</small></div>
-        <div class="node hub"><b>Companion</b><small>Contient la config des touches (le fichier <code>.companionconfig</code>) et deux connexions : <code>http</code> et <code>vmix</code>.</small></div>
-        <div class="node"><b>Serveur PSO</b><small>Affiche / cache les overlays OBS, gère le score.</small><span class="link">HTTP GET → localhost:3002/api/deck/…</span></div>
+      <p class="lead">Le Stream Deck ne sait rien faire tout seul. Chaque touche est configurée dans <b>Companion</b>, qui envoie un ordre au bon logiciel au moment où tu appuies. Le skill <code>companion</code> fabrique ces touches à ta place, pour n'importe quel projet.</p>
+      <div class="flow" role="img" aria-label="Le Stream Deck est relié à Companion, qui envoie des requêtes HTTP à l'API de ton projet et des commandes TCP à vMix">
+        <div class="node src"><b>Stream Deck</b><small>Un XL a 32 touches (8 × 4) par page. ⬆️ ⬇️ changent de page.</small></div>
+        <div class="node hub"><b>Companion</b><small>Contient la config des touches (fichier <code>.companionconfig</code>) et des connexions : une <code>generic-http</code> par projet, <code>vmix</code> si besoin.</small></div>
+        <div class="node"><b>Ton projet</b><small>N'importe quel logiciel qui expose une API HTTP : serveur Node, Python, outil maison…</small><span class="link">HTTP GET / POST → http://hôte:port/api/…</span></div>
         <div class="node"><b>vMix</b><small>Preview, program, transitions, stingers, overlays, REC, stream, replay, audio.</small><span class="link">TCP → 127.0.0.1:8099</span></div>
       </div>
-      <p>Companion peut aussi <b>lire l'état de vMix</b> : une touche peut s'allumer en vert quand son input est en preview, en rouge quand il est à l'antenne, en rouge quand l'enregistrement tourne. C'est ce qu'on appelle un <i>feedback</i>.</p>
+      <p>Tu décris les touches voulues dans une <b>spec</b> (un petit fichier JSON, ou simplement en français à Claude). Le script du skill la transforme en fichier Companion, que tu importes. Companion peut aussi <b>lire l'état de vMix</b> : une touche s'allume en vert quand son input est en preview, en rouge quand il est à l'antenne. C'est un <i>feedback</i>.</p>
     </section>
 
     <!-- FICHIERS -->
     <section id="fichiers">
       <h2>Les fichiers</h2>
-      <p>Tout est rangé à trois endroits. Le dépôt <code>P:\pso-companion</code> (aussi sur GitHub) est la version de référence, chaque skill y a son dossier dans <code>skills\</code> ; le dossier <code>.claude</code> est la copie que Claude utilise ; le dossier <code>PSO\companion</code> contient les fichiers qu'on importe dans Companion.</p>
+      <p>Le dépôt <code>P:\pso-companion</code> (aussi sur GitHub) est la version de référence. Chaque skill y a son dossier dans <code>skills\</code>. Installé, le skill vit dans <code>%USERPROFILE%\.claude\skills\companion</code> (tous les projets) ou <code>&lt;projet&gt;\.claude\skills\companion</code> (un seul projet).</p>
       <div class="table-wrap"><table>
-        <thead><tr><th>Fichier</th><th>Où</th><th>À quoi il sert</th></tr></thead>
+        <thead><tr><th>Fichier du skill</th><th>À quoi il sert</th></tr></thead>
         <tbody>
-          <tr><td><code>SKILL.md</code></td><td><code>P:\pso-companion\skills\companion</code></td><td>Les instructions du skill : conventions des boutons PSO et vMix, méthode, format des specs. Claude le lit quand tu parles de Companion ou de Stream Deck.</td></tr>
-          <tr><td><code>VMIX.md</code></td><td><code>P:\pso-companion\skills\companion</code></td><td>La liste des actions et feedbacks vMix, avec leurs options, relevée dans le code du module officiel.</td></tr>
-          <tr><td><code>scripts/companion.py</code></td><td><code>P:\pso-companion\skills\companion</code></td><td>Le script qui lit (<code>dump</code>) et fabrique (<code>apply</code>) les boutons dans un fichier Companion.</td></tr>
-          <tr><td><code>examples/spec.json</code></td><td><code>P:\pso-companion\skills\companion</code></td><td>Exemple de page PSO : score, toggles d'overlay, bouton maître.</td></tr>
-          <tr><td><code>examples/vmix-spec.json</code></td><td><code>P:\pso-companion\skills\companion</code></td><td>La description des pages <b>vMix Régie</b> et <b>vMix Auto</b>. C'est le fichier à modifier pour changer ces pages.</td></tr>
-          <tr><td><code>README.md</code></td><td><code>P:\pso-companion</code></td><td>Résumé du dépôt et commandes.</td></tr>
-          <tr><td><code>server.js</code> · <code>start.bat</code></td><td><code>P:\pso-companion</code></td><td>Le serveur local de skills et de documentation (port 3011), et son lanceur.</td></tr>
-          <tr><td><code>public/</code></td><td><code>P:\pso-companion</code></td><td>Les pages du serveur : catalogue des skills et cette documentation.</td></tr>
-          <tr><td><code>config.json</code></td><td><code>P:\pso-companion</code></td><td>Port du serveur et dossier des exports Companion à proposer au téléchargement.</td></tr>
-          <tr><td>Copie du skill</td><td><code>P:\PSO 2\.claude\skills\companion</code></td><td>Même contenu que le dépôt. C'est ici que Claude Code va chercher le skill quand tu travailles dans <code>P:\PSO 2</code>.</td></tr>
-          <tr><td><code>PSO-Companion (19).companionconfig</code></td><td><code>P:\PSO 2\PSO\companion</code></td><td>Ton export d'origine (pages 1 et 2). Jamais modifié par la génération vMix.</td></tr>
-          <tr><td><code>PSO-Companion-vMix.companionconfig</code></td><td><code>P:\PSO 2\PSO\companion</code></td><td>Le fichier à importer : pages 1 et 2 + pages 3 et 4 vMix + connexion vMix.</td></tr>
-          <tr><td><code>server.js</code></td><td><code>P:\PSO 2\PSO</code></td><td>Le serveur PSO. Sa liste <code>TRANSITION_IDS</code> dit quels overlays existent ; le script s'en sert pour te prévenir d'un bouton qui ne marchera pas.</td></tr>
+          <tr><td><code>SKILL.md</code></td><td>Les instructions que Claude lit quand tu parles de Companion ou de Stream Deck : méthode, format des specs, conventions.</td></tr>
+          <tr><td><code>VMIX.md</code></td><td>Les actions et feedbacks vMix, avec leurs options, relevés dans le code du module officiel.</td></tr>
+          <tr><td><code>scripts/companion.py</code></td><td>Le script : <code>init</code> (fichier neuf), <code>dump</code> (lire un fichier), <code>apply</code> (fabriquer les touches d'une spec).</td></tr>
+          <tr><td><code>examples/generique/api-http.json</code></td><td>Un projet quelconque avec une API HTTP : GET, POST avec corps JSON, toggles, bouton maître, enchaînement avec délai.</td></tr>
+          <tr><td><code>examples/vmix/vmix-regie.json</code></td><td>Un pupitre vMix complet, réutilisable tel quel dans n'importe quel projet.</td></tr>
+          <tr><td><code>examples/pso/</code></td><td>Un projet réel : la régie de tournoi PSO. Page d'overlays et automatisations qui mélangent l'API du projet et vMix, avec un README qui explique la démarche.</td></tr>
         </tbody>
       </table></div>
-      <div class="note"><b>Un fichier <code>.companionconfig</code> ne s'ouvre pas dans un éditeur.</b> C'est du texte compressé. Pour voir ce qu'il contient, utilise la commande <code>dump</code> du script (étape 5 du tutoriel).</div>
+      <div class="table-wrap" style="margin-top:14px"><table>
+        <thead><tr><th>Fichier du dépôt</th><th>À quoi il sert</th></tr></thead>
+        <tbody>
+          <tr><td><code>server.js</code> · <code>start.bat</code></td><td>Le serveur local de skills et de documentation (port 3011), et son lanceur.</td></tr>
+          <tr><td><code>public/</code></td><td>Les pages du serveur : catalogue des skills et cette documentation.</td></tr>
+          <tr><td><code>config.json</code></td><td>Port du serveur, et <code>exportsDirs</code> : les dossiers de tes projets dont les fichiers <code>.companionconfig</code> sont proposés au téléchargement (vide par défaut).</td></tr>
+        </tbody>
+      </table></div>
+      <div class="note"><b>Un fichier <code>.companionconfig</code> ne s'ouvre pas dans un éditeur.</b> C'est du texte compressé. Pour voir ce qu'il contient, utilise la commande <code>dump</code> du script.</div>
     </section>
 
 
     <!-- SERVEUR -->
     <section id="serveur">
       <h2>Serveur de skills</h2>
-      <p class="lead">Un petit serveur local, sur le même principe que PSO, met les skills et cette documentation à disposition de tous les PC de la régie.</p>
+      <p class="lead">Un petit serveur local met les skills et cette documentation à disposition de tous les PC du réseau.</p>
       <div class="table-wrap"><table>
         <thead><tr><th>Adresse</th><th>Contenu</th></tr></thead>
         <tbody>
-          <tr><td><code>http://&lt;IP&gt;:3011/</code></td><td>Catalogue : chaque skill avec son .zip, sa commande d'installation et la lecture de ses fichiers. Liste aussi les exports Companion à télécharger.</td></tr>
+          <tr><td><code>http://&lt;IP&gt;:3011/</code></td><td>Catalogue : chaque skill avec son .zip, sa commande d'installation et la lecture de ses fichiers. Liste aussi les exports Companion des dossiers déclarés dans <code>config.json</code>.</td></tr>
           <tr><td><code>http://&lt;IP&gt;:3011/docs</code></td><td>Cette documentation.</td></tr>
-          <tr><td><code>/download/skills/companion.zip</code></td><td>Le skill companion, prêt à décompresser dans <code>.claude\skills</code>.</td></tr>
+          <tr><td><code>/download/skills/companion.zip</code></td><td>Le skill companion, prêt à décompresser dans <code>%USERPROFILE%\.claude\skills</code>.</td></tr>
           <tr><td><code>/api/skills</code></td><td>La liste des skills en JSON.</td></tr>
         </tbody>
       </table></div>
@@ -273,7 +275,7 @@ footer{max-width:1180px;margin:64px auto 0;padding-top:20px;border-top:1px solid
     <!-- TUTO -->
     <section id="tuto">
       <h2>Mise en place</h2>
-      <p class="lead">Coche chaque étape quand elle est faite. Ta progression reste enregistrée dans ce navigateur.</p>
+      <p class="lead">Pour un nouveau projet. Coche chaque étape quand elle est faite : ta progression reste enregistrée dans ce navigateur.</p>
       <div class="progress"><div class="bar"><i id="bar"></i></div><span id="progress-label">0 / 8</span></div>
       <ol class="steps">
         <li>
@@ -281,104 +283,83 @@ footer{max-width:1180px;margin:64px auto 0;padding-top:20px;border-top:1px solid
           <div class="step-head"><h3>Vérifier les logiciels</h3><label class="check"><input type="checkbox" id="s1"> Fait</label></div>
           <div class="step-body">
             <ul>
-              <li><b>Companion 4.3 ou plus récent</b> (tu as la 4.3.1). Le module vMix v5 en a besoin.</li>
-              <li><b>vMix</b> ouvert sur le PC de régie. Le replay demande une édition qui l'inclut (4K ou Pro).</li>
+              <li><b>Companion 4.3 ou plus récent</b>.</li>
               <li><b>Python 3</b> : tape <code>python --version</code> dans un terminal.</li>
-              <li><b>Git</b> et <b>GitHub CLI</b> si tu veux récupérer ou mettre à jour le dépôt.</li>
-              <li>Le <b>serveur PSO</b> se lance avec <code>start.bat</code> dans <code>P:\PSO 2\PSO</code>.</li>
+              <li><b>Claude Code</b>, pour demander les touches en français.</li>
+              <li>Si ton projet utilise vMix : <b>vMix</b> ouvert, port TCP <code>8099</code> libre (le Web Controller de vMix ne doit pas utiliser ce port).</li>
             </ul>
           </div>
         </li>
         <li>
           <span class="step-num"></span>
-          <div class="step-head"><h3>Récupérer le dépôt</h3><label class="check"><input type="checkbox" id="s2"> Fait</label></div>
+          <div class="step-head"><h3>Installer le skill</h3><label class="check"><input type="checkbox" id="s2"> Fait</label></div>
           <div class="step-body">
-            <p>Déjà fait sur ce PC : le dépôt est dans <code>P:\pso-companion</code>. Sur un autre PC :</p>
-            <div class="code"><pre>git clone https://github.com/rambour33/pso-companion.git P:\pso-companion</pre><button class="copy" type="button">Copier</button></div>
-            <p>Puis lance le serveur de skills avec <code>P:\pso-companion\start.bat</code> (voir la section Serveur de skills).</p>
-            <p>Pour récupérer les dernières modifications plus tard :</p>
-            <div class="code"><pre>git -C P:\pso-companion pull</pre><button class="copy" type="button">Copier</button></div>
-          </div>
-        </li>
-        <li>
-          <span class="step-num"></span>
-          <div class="step-head"><h3>Installer le skill pour Claude</h3><label class="check"><input type="checkbox" id="s3"> Fait</label></div>
-          <div class="step-body">
-            <p>Déjà fait sur ce PC. Sur un autre PC, ou après une mise à jour du skill : ouvre le catalogue <code>http://&lt;IP&gt;:3011/</code> et copie la commande d'installation du skill, ou tape directement (remplace l'IP) :</p>
+            <p>Ouvre le catalogue <code>http://&lt;IP&gt;:3011/</code> et copie la commande d'installation, ou tape directement (remplace l'IP). Le skill est alors disponible dans <b>tous</b> tes projets :</p>
             <div class="code"><pre>Invoke-WebRequest http://192.168.1.x:3011/download/skills/companion.zip -OutFile "$env:TEMP\companion.zip"
-Expand-Archive "$env:TEMP\companion.zip" -DestinationPath "P:\PSO 2\.claude\skills" -Force</pre><button class="copy" type="button">Copier</button></div>
-            <p>Sur le PC qui héberge le dépôt, tu peux aussi copier le dossier directement :</p>
-            <div class="code"><pre>Copy-Item P:\pso-companion\skills\companion "P:\PSO 2\.claude\skills\" -Recurse -Force</pre><button class="copy" type="button">Copier</button></div>
-            <p>Vérification : dans Claude Code ouvert sur <code>P:\PSO 2</code>, tape <code>/companion</code>. Le skill doit se charger.</p>
+Expand-Archive "$env:TEMP\companion.zip" -DestinationPath "$env:USERPROFILE\.claude\skills" -Force</pre><button class="copy" type="button">Copier</button></div>
+            <p>Vérification : dans Claude Code, tape <code>/companion</code>. Le skill doit se charger.</p>
           </div>
         </li>
         <li>
           <span class="step-num"></span>
-          <div class="step-head"><h3>Préparer vMix</h3><label class="check"><input type="checkbox" id="s4"> Fait</label></div>
+          <div class="step-head"><h3>Repérer l'API de ton projet</h3><label class="check"><input type="checkbox" id="s3"> Fait</label></div>
           <div class="step-body">
-            <p>Les automatisations de la page 4 appellent les inputs <b>par leur nom</b>. Renomme tes inputs dans vMix (clic droit sur l'input) pour qu'ils portent exactement ces noms :</p>
-            <div class="table-wrap"><table>
-              <thead><tr><th>Nom exact</th><th>Contenu conseillé</th><th>Utilisé par</th></tr></thead>
-              <tbody>
-                <tr><td><code>JEU</code></td><td>Capture de la Switch / du jeu</td><td>Début match, Retour jeu</td></tr>
-                <tr><td><code>CASTERS</code></td><td>Caméra des commentateurs</td><td>Cam casters</td></tr>
-                <tr><td><code>PAUSE</code></td><td>Écran de pause / fond</td><td>Pause, Top 8</td></tr>
-                <tr><td><code>MUSIQUE</code></td><td>Playlist ou musique d'attente</td><td>Mute musique</td></tr>
-                <tr><td><code>MICROS</code></td><td>Entrée audio des micros</td><td>Mute micros</td></tr>
-              </tbody>
-            </table></div>
+            <p>Companion appelle des adresses web. Il faut savoir lesquelles :</p>
             <ul>
-              <li><b>Stinger 1</b> : configure une vidéo de transition dans les réglages des stingers de vMix. Début match et Retour jeu l'utilisent.</li>
-              <li><b>Port</b> : Companion parle à vMix sur le port TCP <code>8099</code>. Le port du Web Controller de vMix ne doit pas être 8099.</li>
-              <li><b>Replay</b> (optionnel) : ajoute un input Replay et lance son enregistrement pour que les touches replay fonctionnent.</li>
+              <li>l'<b>adresse de base</b> du projet : <code>http://localhost:8080</code>, ou l'IP du PC qui le fait tourner ;</li>
+              <li>les <b>routes</b> à déclencher : <code>/api/banner/on</code>, <code>/api/timer</code>… et leur méthode (GET, POST…).</li>
             </ul>
+            <p>Si le projet est ouvert dans Claude Code, Claude les trouve lui-même en lisant le code du serveur. Sinon, garde la liste sous la main.</p>
+            <div class="note">Pas encore d'API ? Demande à Claude d'ajouter au serveur de ton projet des routes simples, par exemple <code>GET /api/deck/&lt;élément&gt;/show</code> et <code>/hide</code>, comme dans l'exemple PSO.</div>
           </div>
         </li>
         <li>
           <span class="step-num"></span>
-          <div class="step-head"><h3>Générer le fichier Companion</h3><label class="check"><input type="checkbox" id="s5"> Fait</label></div>
+          <div class="step-head"><h3>Partir d'un fichier Companion</h3><label class="check"><input type="checkbox" id="s4"> Fait</label></div>
           <div class="step-body">
-            <p>Le fichier <code>PSO-Companion-vMix.companionconfig</code> existe déjà : tu peux aussi le télécharger depuis le catalogue (section Exports Companion). Refais cette commande seulement si tu as modifié <code>vmix-spec.json</code> ou ton export d'origine :</p>
-            <div class="code"><pre>python P:\pso-companion\skills\companion\scripts\companion.py apply "P:\PSO 2\PSO\companion\PSO-Companion (19).companionconfig" P:\pso-companion\skills\companion\examples\vmix-spec.json --server "P:\PSO 2\PSO\server.js" --out "P:\PSO 2\PSO\companion\PSO-Companion-vMix.companionconfig"</pre><button class="copy" type="button">Copier</button></div>
-            <p>Pour contrôler le résultat, liste les touches du fichier :</p>
-            <div class="code"><pre>python P:\pso-companion\skills\companion\scripts\companion.py dump "P:\PSO 2\PSO\companion\PSO-Companion-vMix.companionconfig"</pre><button class="copy" type="button">Copier</button></div>
-            <div class="note">vMix tourne sur un autre PC ? Change <code>"vmix_host"</code> au début de <code>vmix-spec.json</code> (par exemple <code>"192.168.1.20"</code>) avant de générer, ou corrige l'adresse plus tard dans la connexion <code>vmix</code> de Companion.</div>
+            <p><b>Companion déjà configuré</b> : exporte ta config (Companion → Import / Export → Export) et garde le fichier. Pour voir ce qu'il contient :</p>
+            <div class="code"><pre>python "$env:USERPROFILE\.claude\skills\companion\scripts\companion.py" dump "D:\MonProjet\export.companionconfig"</pre><button class="copy" type="button">Copier</button></div>
+            <p><b>Projet neuf</b> : crée un fichier vide.</p>
+            <div class="code"><pre>python "$env:USERPROFILE\.claude\skills\companion\scripts\companion.py" init "D:\MonProjet\companion.companionconfig"</pre><button class="copy" type="button">Copier</button></div>
           </div>
         </li>
         <li>
           <span class="step-num"></span>
-          <div class="step-head"><h3>Importer dans Companion</h3><label class="check"><input type="checkbox" id="s6"> Fait</label></div>
+          <div class="step-head"><h3>Décrire les touches</h3><label class="check"><input type="checkbox" id="s5"> Fait</label></div>
+          <div class="step-body">
+            <p>Le plus simple : demande à Claude, dans le projet. Par exemple : « Fais-moi une page Stream Deck avec un toggle pour le bandeau (<code>/api/banner/on</code> et <code>off</code>), un bouton recharger, et un bouton INTRO qui cache le bandeau, lance l'intro et le remet après 8 s ».</p>
+            <p>Claude écrit la spec, génère le fichier et te dit quoi importer. Pour écrire la spec toi-même, voir <a href="#claude">Écrire une spec</a>.</p>
+          </div>
+        </li>
+        <li>
+          <span class="step-num"></span>
+          <div class="step-head"><h3>Générer le fichier</h3><label class="check"><input type="checkbox" id="s6"> Fait</label></div>
+          <div class="step-body">
+            <p>Si tu as écrit la spec toi-même :</p>
+            <div class="code"><pre>python "$env:USERPROFILE\.claude\skills\companion\scripts\companion.py" apply "D:\MonProjet\companion.companionconfig" "D:\MonProjet\ma-spec.json" --out "D:\MonProjet\companion-nouveau.companionconfig"</pre><button class="copy" type="button">Copier</button></div>
+            <p>Avec <code>--out</code>, le fichier d'origine n'est jamais modifié. Ajoute <code>--dry-run</code> pour vérifier sans rien écrire.</p>
+          </div>
+        </li>
+        <li>
+          <span class="step-num"></span>
+          <div class="step-head"><h3>Importer dans Companion</h3><label class="check"><input type="checkbox" id="s7"> Fait</label></div>
           <div class="step-body">
             <ul>
-              <li>Ouvre l'interface web de Companion, onglet <b>Import / Export</b>.</li>
-              <li>Importe <code>PSO-Companion-vMix.companionconfig</code>.</li>
-              <li>Companion propose de tout remplacer ou de choisir ce qu'on importe. Pour ne rien perdre de ce que tu as changé depuis, importe seulement les <b>pages 3 et 4</b> et la connexion <b>vmix</b>.</li>
-              <li>Si Companion signale que le module <b>studiocoast-vmix</b> n'est pas installé, accepte son installation (version 5.0.5 ou plus récente).</li>
+              <li>Companion → onglet <b>Import / Export</b> → importe le fichier généré.</li>
+              <li>Choisis <b>seulement</b> les pages et les connexions concernées.</li>
+              <li>Si Companion propose d'installer un module (<code>generic-http</code>, <code>studiocoast-vmix</code>), accepte.</li>
             </ul>
-            <div class="note warn"><b>Companion ne relit pas le fichier tout seul.</b> Chaque fois que le fichier est régénéré, il faut le réimporter.</div>
+            <div class="note warn"><b>N'importe jamais en « tout remplacer ».</b> Companion recrée alors l'intégration Stream Deck pendant que le deck est ouvert, et le deck peut rester noir (voir Dépannage).</div>
           </div>
         </li>
         <li>
           <span class="step-num"></span>
-          <div class="step-head"><h3>Vérifier les connexions</h3><label class="check"><input type="checkbox" id="s7"> Fait</label></div>
+          <div class="step-head"><h3>Vérifier et tester</h3><label class="check"><input type="checkbox" id="s8"> Fait</label></div>
           <div class="step-body">
             <ul>
-              <li>Onglet <b>Connections</b> : <code>http</code> et <code>vmix</code> doivent être au vert.</li>
-              <li>Sur le Stream Deck, page 4, la touche <b>vMix CONNEXION</b> passe du rouge au <span style="color:var(--pvw);font-weight:600">vert</span> quand vMix répond.</li>
-              <li>Page 3, les touches <b>PVW</b> affichent le nom de tes inputs sous le numéro.</li>
-            </ul>
-          </div>
-        </li>
-        <li>
-          <span class="step-num"></span>
-          <div class="step-head"><h3>Tester à blanc</h3><label class="check"><input type="checkbox" id="s8"> Fait</label></div>
-          <div class="step-body">
-            <p>Avant un vrai stream, sans être en direct :</p>
-            <ul>
-              <li>Page 3 : appuie sur <b>PVW 1</b> (touche verte), puis <b>CUT</b> (elle devient rouge).</li>
-              <li>Page 3 : <b>OVL 1</b> met l'input en preview dans l'overlay 1. <b>OVL TOUT OFF</b> l'enlève.</li>
-              <li>Page 4 : <b>DÉBUT MATCH</b> doit enchaîner écran VS (5 s), stinger vers JEU, puis scoreboard.</li>
-              <li>Ne teste pas <b>GO LIVE</b> ni <b>FIN LIVE</b> : ils lancent et coupent réellement le stream.</li>
+              <li>Onglet <b>Connections</b> : chaque connexion doit être au vert. Une connexion HTTP en erreur veut dire que le projet ne tourne pas ou que l'adresse de base est fausse.</li>
+              <li>Appuie sur une touche simple (un GET) et vérifie l'effet dans ton projet.</li>
+              <li>Teste les enchaînements hors direct. Ne teste pas les touches qui lancent ou coupent un stream.</li>
             </ul>
           </div>
         </li>
@@ -387,13 +368,13 @@ Expand-Archive "$env:TEMP\companion.zip" -DestinationPath "P:\PSO 2\.claude\skil
 
     <!-- PAGES -->
     <section id="pages">
-      <h2>Les pages du deck</h2>
-      <p class="lead">Clique sur une touche pour voir exactement ce qu'elle fait. Un point blanc en haut à droite signale une touche qui change de couleur selon l'état de vMix ; <code>▸▸</code> signale un enchaînement.</p>
+      <h2>Exemples en images</h2>
+      <p class="lead">Les quatre exemples fournis avec le skill, tels qu'ils apparaissent sur un Stream Deck XL. Clique sur une touche pour voir ce qu'elle fait. Un point blanc signale une touche qui change de couleur selon l'état de vMix ; <code>▸▸</code> signale un enchaînement.</p>
       <div class="tabs" role="tablist" aria-label="Pages du Stream Deck">
-        <button class="tab" role="tab" type="button" data-page="1" id="tab-1">1 · PSO</button>
-        <button class="tab" role="tab" type="button" data-page="2" id="tab-2">2 · Scènes</button>
-        <button class="tab" role="tab" type="button" data-page="3" id="tab-3">3 · vMix Régie</button>
-        <button class="tab" role="tab" type="button" data-page="4" id="tab-4">4 · vMix Auto</button>
+        <button class="tab" role="tab" type="button" data-page="g" id="tab-g">Générique</button>
+        <button class="tab" role="tab" type="button" data-page="v" id="tab-v">vMix Régie</button>
+        <button class="tab" role="tab" type="button" data-page="p1" id="tab-p1">PSO · Overlays</button>
+        <button class="tab" role="tab" type="button" data-page="p4" id="tab-p4">PSO · vMix Auto</button>
       </div>
       <p id="page-intro" class="lead" style="margin-top:0"></p>
       <div class="deck-area">
@@ -402,63 +383,103 @@ Expand-Archive "$env:TEMP\companion.zip" -DestinationPath "P:\PSO 2\.claude\skil
           <div class="deck-legend">
             <span><i class="tally-dot" style="background:#1c9a3e"></i>Preview (vMix)</span>
             <span><i class="tally-dot" style="background:#cf2b2b"></i>Program / actif</span>
-            <span><i class="tally-dot" style="background:#003300;border:1px solid #1c9a3e"></i>Overlay PSO affiché</span>
-            <span><i class="tally-dot" style="background:#aa0000"></i>Overlay PSO caché</span>
+            <span><i class="tally-dot" style="background:#003300;border:1px solid #1c9a3e"></i>Toggle actif</span>
+            <span><i class="tally-dot" style="background:#aa0000"></i>Toggle inactif</span>
           </div>
         </div>
         <aside class="detail" id="detail" aria-live="polite"></aside>
       </div>
     </section>
 
+
+    <!-- PSO -->
+    <section id="pso">
+      <h2>Exemple : régie PSO</h2>
+      <p class="lead">Un projet réel qui montre toute la démarche : un serveur Node (port 3002) pilote des overlays de tournoi Smash Bros, et le Stream Deck le contrôle en même temps que vMix. Les fichiers sont dans <code>examples/pso/</code>.</p>
+      <h3>1. L'API du projet</h3>
+      <p>Le serveur expose des routes GET faites pour le Stream Deck :</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Route</th><th>Effet</th></tr></thead>
+        <tbody>
+          <tr><td><code>/api/deck/&lt;overlay&gt;/show</code> · <code>/hide</code></td><td>Affiche / cache un overlay (scoreboard, casters, cam, victory…)</td></tr>
+          <tr><td><code>/api/deck/score/p1/inc</code> · <code>p2/dec</code>…</td><td>Score ±1</td></tr>
+          <tr><td><code>/api/deck/score/reset</code></td><td>Score 0-0</td></tr>
+        </tbody>
+      </table></div>
+      <h3>2. La connexion</h3>
+      <p>Les specs déclarent <code>"http": { "label": "http", "base_url": "http://localhost:3002" }</code>. Les touches utilisent donc des adresses courtes comme <code>/api/deck/cam/show</code>.</p>
+      <h3>3. Les deux specs</h3>
+      <ul>
+        <li><code>pso-overlays.json</code> : barre de score, 21 toggles d'overlay (<code>on_url</code> = <code>/show</code>, <code>off_url</code> = <code>/hide</code>), et un bouton maître qui les commande tous.</li>
+        <li><code>pso-vmix-auto.json</code> : des automatisations qui enchaînent l'API PSO et vMix. Par exemple DÉBUT MATCH : score à 0, écran VS 5 s, stinger vMix vers l'input <code>JEU</code>, puis scoreboard.</li>
+      </ul>
+      <h3>4. Les conventions propres à ce projet</h3>
+      <ul>
+        <li>Inputs vMix nommés <code>JEU</code>, <code>CASTERS</code>, <code>PAUSE</code>, <code>MUSIQUE</code>, <code>MICROS</code>. Les automatisations les appellent par leur nom.</li>
+        <li>Stinger 1 configuré dans vMix pour les changements de plan.</li>
+        <li>Les overlays valides sont ceux de la liste <code>TRANSITION_IDS</code> du serveur. Un autre nom renvoie une erreur 404, d'où l'importance de relire les routes avant d'écrire une spec.</li>
+      </ul>
+      <p>Pour transposer à ton projet : remplace l'adresse de base et les routes par celles de ton API, garde la structure.</p>
+    </section>
+
     <!-- TYPES -->
     <section id="boutons">
-      <h2>Types de boutons</h2>
-      <p>Chaque touche du deck appartient à l'une de ces familles. Le nom entre parenthèses est celui qu'on écrit dans une spec (le fichier qui décrit les touches).</p>
+      <h2>Types de touches</h2>
+      <p>Chaque touche appartient à l'une de ces familles. Le nom entre parenthèses est celui qu'on écrit dans une spec.</p>
       <div class="concepts">
-        <div class="concept"><h3>Toggle overlay <span class="mono">(toggle)</span></h3><p>Deux états. 1<sup>er</sup> appui : l'overlay PSO s'affiche, la touche devient vert foncé. 2<sup>e</sup> appui : il se cache, la touche devient rouge.</p></div>
-        <div class="concept"><h3>Commande simple <span class="mono">(get)</span></h3><p>Un appui = un ordre au serveur PSO. Exemple : +1 au score du joueur 1.</p></div>
-        <div class="concept"><h3>Bouton maître <span class="mono">(master)</span></h3><p>Affiche ou cache tous les overlays d'une page d'un coup, recolore les autres touches et les remet dans le bon état.</p></div>
-        <div class="concept"><h3>Macro <span class="mono">(macro)</span></h3><p>Touche libre : actions vMix, ordres PSO et pauses, exécutés l'un après l'autre. C'est le type des pages 3 et 4.</p></div>
-        <div class="concept"><h3>Feedback</h3><p>Couleur qui suit l'état réel de vMix : input en preview ou en direct, REC, stream, mute. Il se met à jour tout seul, même si tu agis dans vMix à la souris.</p></div>
-        <div class="concept"><h3>Enchaînement</h3><p>Par défaut Companion lance toutes les actions d'une touche en même temps. Les macros les rangent dans un groupe <b>séquentiel</b> pour que les pauses (<code>wait</code>) soient respectées.</p></div>
+        <div class="concept"><h3>Commande simple <span class="mono">(get)</span></h3><p>Un appui = une ou plusieurs requêtes GET vers ton projet. Exemple : recharger, +1 au score.</p></div>
+        <div class="concept"><h3>Toggle <span class="mono">(toggle)</span></h3><p>Deux états. 1<sup>er</sup> appui : actions ON, la touche passe au vert foncé. 2<sup>e</sup> appui : actions OFF, elle passe au rouge. Les actions peuvent être des GET, des POST, du vMix…</p></div>
+        <div class="concept"><h3>Bouton maître <span class="mono">(master)</span></h3><p>Active ou désactive d'un coup tous les toggles d'une liste, recolore leurs touches et les remet dans le bon état.</p></div>
+        <div class="concept"><h3>Macro <span class="mono">(macro)</span></h3><p>Touche libre : requêtes HTTP, actions vMix et pauses, exécutées l'une après l'autre. Peut avoir plusieurs états (<code>steps</code>).</p></div>
+        <div class="concept"><h3>Feedback</h3><p>Couleur qui suit l'état réel de vMix : input en preview ou à l'antenne, REC, stream, mute. Il se met à jour tout seul.</p></div>
+        <div class="concept"><h3>Navigation <span class="mono">(page_up, page_down)</span></h3><p>Changent de page sur le deck. Par convention en haut à gauche de chaque page.</p></div>
       </div>
     </section>
 
     <!-- CLAUDE -->
     <section id="claude">
-      <h2>Créer ou modifier des boutons</h2>
+      <h2>Écrire une spec</h2>
       <h3>Avec Claude (le plus simple)</h3>
-      <p>Dans Claude Code ouvert sur <code>P:\PSO 2</code>, décris ce que tu veux en français. Le skill <code>companion</code> se charge tout seul. Exemples :</p>
+      <p>Dans Claude Code, ouvert sur ton projet, décris ce que tu veux en français. Le skill se charge tout seul, lit les routes de ton projet et fabrique le fichier. Exemples :</p>
       <ul class="prompts">
-        <li>Ajoute sur la page 4 un bouton qui lance le stinger 2 puis affiche les casters.</li>
-        <li>Mets les inputs 9 à 16 en preview sur une nouvelle page 5.</li>
-        <li>Crée un bouton « Interview » : fondu vers l'input INTERVIEW, cache le scoreboard, mute la musique.</li>
-        <li>Change FADE 500 ms en FADE 1 s.</li>
+        <li>Crée une page Stream Deck pour piloter l'API de ce projet : un toggle par élément affichable et un bouton maître.</li>
+        <li>Ajoute un bouton qui lance le stinger 2 dans vMix puis appelle /api/casters/show.</li>
+        <li>Fais-moi un pupitre vMix pour les inputs 1 à 8 avec le tally.</li>
+        <li>Transforme ma touche « Minuteur » en toggle qui envoie un POST start / stop.</li>
       </ul>
-      <p>Claude modifie la spec, régénère le fichier, vérifie le résultat et te dit quoi réimporter.</p>
 
       <h3>À la main</h3>
-      <p>Ouvre <code>P:\pso-companion\skills\companion\examples\vmix-spec.json</code> dans un éditeur, modifie ou ajoute une entrée, puis refais l'étape 5 du tutoriel. Une touche s'écrit ainsi :</p>
-      <div class="code"><pre>{ "loc": "4/2/5", "kind": "macro", "text": "STINGER 2\nCASTERS", "bg": "#5a2d82",
-  "actions": [
-    { "get": "/api/deck/scoreboard/hide" },
-    { "vmix": "previewInput", "input": "CASTERS" },
-    { "vmix": "transition", "functionID": "Stinger2", "mix": 1 },
-    { "wait": 1000 },
-    { "get": "/api/deck/casters/show" }
-  ],
-  "feedbacks": [ { "vmix": "inputLive", "input": "CASTERS", "bg": "#CC0000" } ] }</pre><button class="copy" type="button">Copier</button></div>
+      <p>Une spec est un fichier JSON : la connexion, les pages, puis la liste des touches.</p>
+      <div class="code"><pre>{
+  "http":  { "label": "mon-app", "base_url": "http://localhost:8080" },
+  "pages": { "1": { "name": "Mon projet" } },
+  "buttons": [
+    { "loc": "1/0/0", "kind": "page_up" },
+    { "loc": "1/0/2", "kind": "get", "text": "Recharger", "url": "/api/reload" },
+    { "loc": "1/1/0", "kind": "toggle", "text": "▶ Bandeau",
+      "on_url": "/api/banner/on", "off_url": "/api/banner/off" },
+    { "loc": "1/1/2", "kind": "toggle", "text": "▶ Minuteur",
+      "on":  [ { "post": "/api/timer", "body": { "action": "start" } } ],
+      "off": [ { "post": "/api/timer", "body": { "action": "stop" } } ] },
+    { "loc": "1/2/0", "kind": "macro", "text": "▶ INTRO", "bg": "#006600",
+      "actions": [ { "get": "/api/banner/off" }, { "get": "/api/intro/play" },
+                   { "wait": 8000 }, { "get": "/api/banner/on" } ] }
+  ]
+}</pre><button class="copy" type="button">Copier</button></div>
       <div class="table-wrap"><table>
         <thead><tr><th>Champ</th><th>Signification</th></tr></thead>
         <tbody>
-          <tr><td><code>loc</code></td><td>Emplacement <code>page/ligne/colonne</code>. Lignes 0 à 3, colonnes 0 à 7. <code>4/2/5</code> = page 4, 3<sup>e</sup> ligne, 6<sup>e</sup> touche.</td></tr>
+          <tr><td><code>http</code></td><td>La connexion vers ton projet : <code>label</code> (son nom dans Companion) et <code>base_url</code> (adresse de base). Créée si elle n'existe pas.</td></tr>
+          <tr><td><code>vmix</code></td><td>Optionnel : <code>host</code> et <code>port</code> de vMix, si la spec contient des actions vMix.</td></tr>
+          <tr><td><code>loc</code></td><td>Emplacement <code>page/ligne/colonne</code>. Lignes 0 à 3, colonnes 0 à 7 sur un XL. <code>1/2/0</code> = page 1, 3<sup>e</sup> ligne, 1<sup>re</sup> touche.</td></tr>
           <tr><td><code>text</code></td><td>Texte de la touche. <code>\n</code> = retour à la ligne. <code>$(vmix:input_1_name)</code> affiche le nom de l'input 1.</td></tr>
-          <tr><td><code>bg</code> / <code>size</code></td><td>Couleur de fond (<code>#RRGGBB</code>) et taille du texte (<code>auto</code>, 14, 18…).</td></tr>
-          <tr><td><code>{ "get": … }</code></td><td>Ordre au serveur PSO (liste des overlays dans <code>server.js</code>).</td></tr>
+          <tr><td><code>bg</code> · <code>fg</code> · <code>size</code></td><td>Couleurs (<code>#RRGGBB</code>) et taille du texte (<code>auto</code>, 14, 18…).</td></tr>
+          <tr><td><code>{ "get": … }</code></td><td>Requête GET. Une adresse qui commence par <code>/</code> est ajoutée à la <code>base_url</code>.</td></tr>
+          <tr><td><code>{ "post": …, "body": {…} }</code></td><td>Requête POST avec un corps JSON (idem <code>put</code>, <code>patch</code>, <code>delete</code>).</td></tr>
           <tr><td><code>{ "vmix": … }</code></td><td>Action vMix. Les options non écrites prennent leur valeur par défaut (voir la référence vMix).</td></tr>
           <tr><td><code>{ "wait": 1000 }</code></td><td>Pause en millisecondes avant l'action suivante.</td></tr>
           <tr><td><code>feedbacks</code></td><td>Couleurs automatiques selon l'état de vMix.</td></tr>
-          <tr><td><code>steps</code></td><td>Au lieu de <code>actions</code> : une liste d'actions par appui successif (1<sup>er</sup> appui, 2<sup>e</sup> appui…).</td></tr>
+          <tr><td><code>steps</code></td><td>Au lieu de <code>actions</code> : une liste d'actions par appui successif.</td></tr>
         </tbody>
       </table></div>
     </section>
@@ -503,21 +524,29 @@ Expand-Archive "$env:TEMP\companion.zip" -DestinationPath "P:\PSO 2\.claude\skil
     <!-- DEPANNAGE -->
     <section id="depannage">
       <h2>Dépannage</h2>
+      <details><summary>Le Stream Deck est reconnu, les touches marchent, mais rien ne s'affiche</summary>
+        <p>Cela arrive après un import complet en « tout remplacer » : Companion a recréé l'intégration Stream Deck pendant que le deck était ouvert. Les journaux de Companion affichent <code>Cannot write to hid device</code>.</p>
+        <ul><li>Quitte complètement Companion (clic droit sur son icône près de l'horloge → Quitter).</li>
+        <li>Débranche le Stream Deck 10 secondes, rebranche-le (de préférence directement sur le PC).</li>
+        <li>Relance Companion. À l'avenir, importe seulement les pages et connexions utiles.</li></ul></details>
+      <details><summary>Une touche HTTP ne fait rien</summary>
+        <ul><li>Ton projet doit tourner. Test : ouvre l'adresse de la route dans un navigateur (pour un GET).</li>
+        <li>Onglet Connections de Companion : la connexion HTTP doit être au vert et sa <b>Base URL</b> correcte.</li>
+        <li>Vérifie la route dans le code du projet : une route inexistante renvoie une erreur 404.</li></ul></details>
       <details><summary>Une touche vMix ne fait rien</summary>
-        <ul><li>Regarde la touche <b>vMix CONNEXION</b> (page 4) : rouge = Companion ne joint pas vMix. Vérifie que vMix est ouvert, l'adresse de la connexion <code>vmix</code> et le port 8099.</li>
-        <li>Si la touche utilise un nom d'input (<code>JEU</code>, <code>PAUSE</code>…), vérifie que l'input porte exactement ce nom dans vMix.</li>
+        <ul><li>La connexion <code>vmix</code> doit être au vert : vMix ouvert, bonne adresse, port 8099.</li>
+        <li>Si la touche utilise un nom d'input, vérifie que l'input porte exactement ce nom dans vMix.</li>
         <li>Les touches stinger demandent un stinger configuré dans vMix.</li></ul></details>
-      <details><summary>Une touche PSO ne fait rien</summary>
-        <ul><li>Le serveur PSO doit tourner (<code>start.bat</code>). Test rapide : ouvre <code>http://localhost:3002/api/deck</code> dans un navigateur.</li>
-        <li>Les touches <b>Éléments SB</b>, <b>Scène 1 à 9</b>, <b>All Scènes</b> et <b>Super Scènes</b> appellent des overlays absents de la liste <code>TRANSITION_IDS</code> du <code>server.js</code> actuel. Le serveur répond « introuvable ». Il faut ajouter ces overlays au serveur pour qu'elles fonctionnent.</li></ul></details>
-      <details><summary>Les touches TW Chat, TW Viewer et YT Chat n'apparaissent pas</summary>
-        <p>Dans ton export, elles sont rangées en ligne 4 de la page 1, alors que le Stream Deck XL n'a que 4 lignes (0 à 3). Déplace-les dans Companion vers des cases libres de la ligne 3 (colonnes 3 à 7).</p></details>
+      <details><summary>Des touches n'apparaissent pas sur le deck</summary>
+        <p>Elles sont sans doute rangées hors de la grille (une 5<sup>e</sup> ligne sur un XL qui n'en a que 4). La commande <code>dump</code> les signale avec « hors de la grille ». Déplace-les ou ajoute des entrées <code>empty</code> pour les retirer.</p></details>
       <details><summary>Les pauses d'un enchaînement ne sont pas respectées</summary>
-        <p>Les actions doivent être dans un groupe <b>séquentiel</b>. Avec une macro générée par le script c'est automatique (<code>"sequential": true</code> par défaut). Si tu as recréé la touche à la main dans Companion, place les actions dans un <i>Action Group</i> en mode <i>Sequential</i>.</p></details>
+        <p>Les actions doivent être dans un groupe <b>séquentiel</b>. Avec une macro générée par le script c'est automatique. Si tu recrées la touche à la main dans Companion, place les actions dans un <i>Action Group</i> en mode <i>Sequential</i>.</p></details>
       <details><summary>J'ai modifié la spec mais le Stream Deck n'a pas changé</summary>
-        <p>Il faut régénérer le fichier (étape 5) puis le réimporter dans Companion (étape 6). Companion ne surveille pas le fichier.</p></details>
-      <details><summary>Les touches PVW n'affichent pas le nom des inputs</summary>
-        <p>La connexion vMix doit s'appeler exactement <code>vmix</code> dans Companion : c'est ce nom qui apparaît dans <code>$(vmix:input_1_name)</code>. Si tu la renommes, les textes affichent la variable brute.</p></details>
+        <p>Il faut régénérer le fichier puis le réimporter dans Companion. Companion ne surveille pas le fichier.</p></details>
+      <details><summary>Les touches vMix n'affichent pas le nom des inputs</summary>
+        <p>La connexion vMix doit s'appeler exactement <code>vmix</code> dans Companion : c'est ce nom qui apparaît dans <code>$(vmix:input_1_name)</code>.</p></details>
+      <details><summary>Le serveur de skills ne démarre pas : « port déjà utilisé »</summary>
+        <p>Il tourne déjà dans une autre fenêtre : ouvre <code>http://localhost:3011/</code>. Pour changer de port, modifie <code>port</code> dans <code>config.json</code>.</p></details>
       <details><summary>Git refuse de travailler dans P:\pso-companion (« dubious ownership »)</summary>
         <p>Le disque P: n'enregistre pas les propriétaires de fichiers. Autorise le dossier une fois :</p>
         <div class="code"><pre>git config --global --add safe.directory P:/pso-companion</pre><button class="copy" type="button">Copier</button></div></details>
@@ -543,7 +572,7 @@ Expand-Archive "$env:TEMP\companion.zip" -DestinationPath "P:\PSO 2\.claude\skil
   </main>
 </div>
 
-<footer>Dépôt : github.com/rambour33/pso-companion (privé) · Module vMix : bitfocus/companion-module-studiocoast-vmix v5.0.5 · Companion 4.3.1 · Stream Deck XL 8 × 4</footer>
+<footer>Dépôt : github.com/rambour33/pso-companion (privé) · Modules : generic-http 3.1, studiocoast-vmix 5.0.5 · Companion 4.3+ · exemples pour Stream Deck XL 8 × 4</footer>
 
 <script>
 (function(){
@@ -561,27 +590,27 @@ Expand-Archive "$env:TEMP\companion.zip" -DestinationPath "P:\PSO 2\.claude\skil
     {t:'+1\nJ2',bg:'#0000aa',does:[['pso','Score joueur 2 +1']]}
   ];
   const tog = (t,id,bg)=>({t:'▶ '+t,bg:bg||ON,steps:true,does:[['pso','1er appui : affiche l\'overlay « '+id+' », touche vert foncé'],['pso','2e appui : le cache, touche rouge']]});
-  const scene = n=>({t:'Scène '+(n+1),bg:OFF,steps:true,warn:true,does:[['pso','1er appui : révèle custom-scene-'+n],['pso','2e appui : la cache']]});
+  const _unused_scene = n=>({t:'Scène '+(n+1),bg:OFF,steps:true,warn:true,does:[['pso','1er appui : révèle custom-scene-'+n],['pso','2e appui : la cache']]});
   const pvw = n=>({t:'PVW '+n+'\n[nom input '+n+']',bg:DARK,fb:true,does:[['vmix','Envoie l\'input '+n+' en preview']],fbs:['Vert quand l\'input '+n+' est en preview','Rouge quand il est à l\'antenne']});
   const pgm = n=>({t:'PGM '+n+'\n[nom input '+n+']',bg:DARK,fb:true,does:[['vmix','Envoie l\'input '+n+' directement à l\'antenne (cut)']],fbs:['Rouge quand l\'input '+n+' est à l\'antenne']});
   const ovl = n=>({t:'OVL '+n+'\nPVW→ON',bg:BLUE,fb:true,does:[['vmix','Overlay '+n+' : met l\'input en preview en overlay (ou l\'enlève s\'il y est déjà)']],fbs:['Vert : overlay en preview · Rouge : overlay à l\'antenne']});
 
   const P = {
-    1:{intro:'Page d\'origine : score et overlays PSO. Chaque ▶ est un toggle ; « ▶ Overlays » est le bouton maître.',
+    g:{num:1,intro:'examples/generique/api-http.json · Un projet quelconque avec une API HTTP (adresse de base http://localhost:8080).',
       rows:[
-        [nav.up,nav.down,...score,{t:'▶ Overlays',bg:ON,steps:true,does:[['pso','1er appui : affiche les 22 overlays PSO, passe toutes les touches ▶ en vert'],['pso','2e appui : cache tout, passe les touches en rouge'],['int','Remet chaque touche ▶ dans l\'état logique pour le prochain appui']]}],
-        [tog('Score-\nboard','scoreboard'),tog('Casters','casters'),tog('Next\nMatch','nextmatch'),tog('VS\nScreen','vs-screen','#0a1a3a'),tog('Victoire','victory'),tog('Cam','cam'),tog('Veto','stageveto'),tog('Timer','timer')],
-        [tog('H2H','h2h'),tog('Stats','player-stats'),tog('Bracket','bracket'),tog('Top 8','top8'),tog('Ticker','ticker'),tog('Frames','frames'),tog('Titre','stream-title'),tog('Chat\nCombiné','combined-chat')],
-        [Object.assign(tog('Éléments\nSB','scoreboard-elements'),{warn:true}),tog('Histori-\nque','tournament-history'),tog('Prochains\nmatchs','upcoming'),null,null,null,null,null]
+        [nav.up,nav.down,
+          {t:'Recharger',bg:SLATE,does:[['http','GET /api/reload']]},
+          {t:'Envoyer\nmessage',bg:BLUE,does:[['http','POST /api/messages avec {"text":"Pause de 5 minutes","level":"info"}']]},
+          null,null,null,null],
+        [{t:'▶ Bandeau',bg:ON,steps:true,does:[['http','1er appui : GET /api/banner/on, touche vert foncé'],['http','2e appui : GET /api/banner/off, touche rouge']]},
+         {t:'▶ Logo',bg:OFF,steps:true,does:[['http','1er appui : GET /api/logo/on (démarre à l\'état inactif : start_off)'],['http','2e appui : GET /api/logo/off']]},
+         {t:'▶ Minuteur',bg:ON,steps:true,does:[['http','1er appui : POST /api/timer {"action":"start","seconds":300}'],['http','2e appui : POST /api/timer {"action":"stop"}']]},
+         null,null,null,null,
+         {t:'▶ Tout',bg:ON,steps:true,does:[['http','1er appui : rejoue les actions ON des 3 toggles, les passe en vert'],['http','2e appui : rejoue leurs actions OFF, les passe en rouge'],['int','Remet chaque toggle dans le bon état pour son prochain appui']]}],
+        [{t:'▶ INTRO',bg:'#006600',seq:true,does:[['http','GET /api/banner/off'],['http','GET /api/intro/play'],['wait','8 s'],['http','GET /api/banner/on']]},null,null,null,null,null,null,null],
+        [null,null,null,null,null,null,null,null]
       ]},
-    2:{intro:'Scènes personnalisées PSO. Attention : ces overlays ne sont pas encore déclarés dans le serveur actuel (voir Dépannage).',
-      rows:[
-        [nav.up,nav.down,...score,{t:'All Scènes',bg:OFF,steps:true,warn:true,does:[['pso','1er appui : révèle les 9 scènes, passe leurs touches en vert'],['pso','2e appui : les cache toutes']]}],
-        [0,1,2,3,4,5,6,7].map(scene),
-        [scene(8),null,{t:'',bg:'#000',does:[['int','Touche de test sans texte : met Scène 2 sur son 1er état à l\'appui, son 2e au relâchement']]},null,null,null,null,null],
-        [Object.assign(tog('Super\nScènes','super-scenes'),{warn:true}),null,null,null,null,null,null,null]
-      ]},
-    3:{intro:'Pupitre vMix. Ligne 1 : choisir la preview. Ligne 2 : couper directement à l\'antenne. Ligne 0 : envoyer la preview à l\'antenne.',
+    v:{num:1,intro:'examples/vmix/vmix-regie.json · Pupitre vMix réutilisable dans n\'importe quel projet. Ligne 1 : choisir la preview. Ligne 2 : couper directement à l\'antenne. Ligne 0 : envoyer la preview à l\'antenne.',
       rows:[
         [nav.up,nav.down,
           {t:'CUT',bg:GREY,does:[['vmix','Passe la preview à l\'antenne, sans transition']]},
@@ -599,7 +628,14 @@ Expand-Archive "$env:TEMP\companion.zip" -DestinationPath "P:\PSO 2\.claude\skil
           {t:'MULTI\nCORDER',bg:SLATE,fb:true,does:[['vmix','Démarre / arrête le MultiCorder']],fbs:['Rouge pendant l\'enregistrement MultiCorder']},
           {t:'MUTE\nMASTER',bg:SLATE,fb:true,does:[['vmix','Coupe / rétablit le son du bus Master']],fbs:['Rouge quand le Master est muté']}]
       ]},
-    4:{intro:'Automatisations : une touche déclenche un enchaînement vMix + overlays PSO, avec des pauses. Les noms en majuscules (JEU, PAUSE…) sont des noms d\'inputs vMix.',
+    p1:{num:1,intro:'examples/pso/pso-overlays.json · Score et overlays du projet PSO. Chaque ▶ est un toggle (/show puis /hide) ; « ▶ Overlays » est le bouton maître.',
+      rows:[
+        [nav.up,nav.down,...score,{t:'▶ Overlays',bg:ON,steps:true,does:[['pso','1er appui : affiche les 21 overlays, passe toutes les touches ▶ en vert'],['pso','2e appui : cache tout, passe les touches en rouge'],['int','Remet chaque touche ▶ dans l\'état logique pour le prochain appui']]}],
+        [tog('Score-\nboard','scoreboard'),tog('Casters','casters'),tog('Next\nMatch','nextmatch'),tog('VS\nScreen','vs-screen','#0a1a3a'),tog('Victoire','victory'),tog('Cam','cam'),tog('Veto','stageveto'),tog('Timer','timer')],
+        [tog('H2H','h2h'),tog('Stats','player-stats'),tog('Bracket','bracket'),tog('Top 8','top8'),tog('Ticker','ticker'),tog('Frames','frames'),tog('Titre','stream-title'),tog('Chat\nCombiné','combined-chat')],
+        [tog('Histori-\nque','tournament-history'),tog('Prochains\nmatchs','upcoming'),tog('TW\nChat','twitch-chat'),tog('TW\nViewer','twitch-viewer'),tog('YT\nChat','youtube-chat'),null,null,null]
+      ]},
+    p4:{num:4,intro:'examples/pso/pso-vmix-auto.json · Automatisations : une touche déclenche un enchaînement vMix + API PSO, avec des pauses. Les noms en majuscules (JEU, PAUSE…) sont des noms d\'inputs vMix.',
       rows:[
         [nav.up,nav.down,...score,{t:'vMix\nCONNEXION',bg:'#cc0000',fb:true,does:[['int','Aucune action : témoin']],fbs:['Vert quand Companion est connecté à vMix, rouge sinon']}],
         [
@@ -627,7 +663,7 @@ Expand-Archive "$env:TEMP\companion.zip" -DestinationPath "P:\PSO 2\.claude\skil
   const deck = document.getElementById('deck');
   const detail = document.getElementById('detail');
   const intro = document.getElementById('page-intro');
-  const TAG = {pso:['pso','PSO'],vmix:['vmix','vMix'],wait:['','pause'],int:['','Companion']};
+  const TAG = {pso:['pso','API PSO'],http:['pso','HTTP'],vmix:['vmix','vMix'],wait:['','pause'],int:['','Companion']};
   let current = '1';
 
   function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
@@ -652,7 +688,7 @@ Expand-Archive "$env:TEMP\companion.zip" -DestinationPath "P:\PSO 2\.claude\skil
     P[page].rows.forEach((row,r)=>row.forEach((k,c)=>{
       const b=document.createElement('button');
       b.type='button';
-      const loc=page+'/'+r+'/'+c;
+      const loc=P[page].num+'/'+r+'/'+c;
       if(!k){ b.className='key empty'; b.setAttribute('aria-label','Case libre '+loc); }
       else{
         b.className='key'+(k.nav?' nav':'');
@@ -670,8 +706,8 @@ Expand-Archive "$env:TEMP\companion.zip" -DestinationPath "P:\PSO 2\.claude\skil
     try{localStorage.setItem('pso-docs-page',page);}catch(e){}
   }
   document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>render(t.dataset.page)));
-  let startPage='3'; try{startPage=localStorage.getItem('pso-docs-page')||'3';}catch(e){}
-  render(P[startPage]?startPage:'3');
+  let startPage='g'; try{startPage=localStorage.getItem('pso-docs-page')||'g';}catch(e){}
+  render(P[startPage]?startPage:'g');
 
   // ── Checklist ──
   const boxes=[...document.querySelectorAll('.steps input[type=checkbox]')];

@@ -1,7 +1,7 @@
 {
   "name": "pso-companion",
   "version": "1.0.0",
-  "description": "Serveur local : téléchargement des skills Claude Code et documentation Companion / vMix pour la régie PSO",
+  "description": "Serveur local : catalogue et téléchargement des skills Claude Code, avec leur documentation",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"

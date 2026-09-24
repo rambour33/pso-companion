@@ -1,0 +1,395 @@
+{
+  "http": {
+    "label": "http",
+    "base_url": "http://localhost:3002"
+  },
+  "vmix": {
+    "host": "127.0.0.1",
+    "port": 8099
+  },
+  "pages": {
+    "4": {
+      "name": "vMix Auto"
+    }
+  },
+  "buttons": [
+    {
+      "loc": "4/0/0",
+      "kind": "page_up"
+    },
+    {
+      "loc": "4/0/1",
+      "kind": "page_down"
+    },
+    {
+      "loc": "4/0/2",
+      "kind": "get",
+      "text": "+1\nJ1",
+      "url": "/api/deck/score/p1/inc",
+      "bg": "#AA0000",
+      "size": 18
+    },
+    {
+      "loc": "4/0/3",
+      "kind": "get",
+      "text": "-1\nJ1",
+      "url": "/api/deck/score/p1/dec",
+      "bg": "#660000",
+      "size": 18
+    },
+    {
+      "loc": "4/0/4",
+      "kind": "get",
+      "text": "RESET\n0/0",
+      "url": "/api/deck/score/reset",
+      "bg": "#806200",
+      "size": 14
+    },
+    {
+      "loc": "4/0/5",
+      "kind": "get",
+      "text": "-1\nJ2",
+      "url": "/api/deck/score/p2/dec",
+      "bg": "#000066",
+      "size": 18
+    },
+    {
+      "loc": "4/0/6",
+      "kind": "get",
+      "text": "+1\nJ2",
+      "url": "/api/deck/score/p2/inc",
+      "bg": "#0000AA",
+      "size": 18
+    },
+    {
+      "loc": "4/0/7",
+      "kind": "macro",
+      "text": "vMix\nCONNEXION",
+      "size": 14,
+      "bg": "#CC0000",
+      "actions": [],
+      "feedbacks": [
+        {
+          "vmix": "status",
+          "status": "connection",
+          "style": {
+            "bgcolor": "#006600",
+            "color": "#FFFFFF"
+          }
+        }
+      ]
+    },
+    {
+      "loc": "4/1/0",
+      "kind": "macro",
+      "text": "▶ DÉBUT\nMATCH",
+      "bg": "#006600",
+      "actions": [
+        {
+          "get": "/api/deck/score/reset"
+        },
+        {
+          "get": "/api/deck/vs-screen/show"
+        },
+        {
+          "wait": 5000
+        },
+        {
+          "get": "/api/deck/vs-screen/hide"
+        },
+        {
+          "vmix": "previewInput",
+          "input": "JEU"
+        },
+        {
+          "vmix": "transition",
+          "functionID": "Stinger1",
+          "mix": 1
+        },
+        {
+          "wait": 1000
+        },
+        {
+          "get": "/api/deck/scoreboard/show"
+        }
+      ]
+    },
+    {
+      "loc": "4/1/1",
+      "kind": "macro",
+      "text": "■ FIN\nMATCH",
+      "bg": "#AA0000",
+      "actions": [
+        {
+          "get": "/api/deck/scoreboard/hide"
+        },
+        {
+          "get": "/api/deck/victory/show"
+        },
+        {
+          "wait": 6000
+        },
+        {
+          "get": "/api/deck/victory/hide"
+        }
+      ]
+    },
+    {
+      "loc": "4/1/2",
+      "kind": "macro",
+      "text": "⏸ PAUSE",
+      "bg": "#806200",
+      "actions": [
+        {
+          "get": "/api/deck/scoreboard/hide"
+        },
+        {
+          "vmix": "transitionMix",
+          "functionID": "Fade",
+          "duration": "1000",
+          "input": "PAUSE"
+        },
+        {
+          "wait": 1000
+        },
+        {
+          "get": "/api/deck/upcoming/show"
+        }
+      ]
+    },
+    {
+      "loc": "4/1/3",
+      "kind": "macro",
+      "text": "▶ RETOUR\nJEU",
+      "bg": "#006600",
+      "actions": [
+        {
+          "get": "/api/deck/upcoming/hide"
+        },
+        {
+          "vmix": "previewInput",
+          "input": "JEU"
+        },
+        {
+          "vmix": "transition",
+          "functionID": "Stinger1",
+          "mix": 1
+        },
+        {
+          "wait": 1000
+        },
+        {
+          "get": "/api/deck/scoreboard/show"
+        }
+      ]
+    },
+    {
+      "loc": "4/1/4",
+      "kind": "macro",
+      "text": "🎙 CAM\nCASTERS",
+      "bg": "#1f3a5f",
+      "actions": [
+        {
+          "get": "/api/deck/scoreboard/hide"
+        },
+        {
+          "vmix": "transitionMix",
+          "functionID": "Fade",
+          "duration": "500",
+          "input": "CASTERS"
+        },
+        {
+          "wait": 500
+        },
+        {
+          "get": "/api/deck/casters/show"
+        }
+      ]
+    },
+    {
+      "loc": "4/1/5",
+      "kind": "macro",
+      "text": "⟲ REPLAY\n10 s",
+      "bg": "#5a2d82",
+      "actions": [
+        {
+          "vmix": "replayMark",
+          "functionID": "ReplayMarkInOutLive",
+          "value": "10"
+        },
+        {
+          "wait": 300
+        },
+        {
+          "get": "/api/deck/scoreboard/hide"
+        },
+        {
+          "vmix": "replayPlayLastEventToOutput",
+          "channel": "Current"
+        }
+      ],
+      "feedbacks": [
+        {
+          "vmix": "replayStatus",
+          "status": "live",
+          "style": {
+            "bgcolor": "#CC0000",
+            "color": "#FFFFFF"
+          }
+        }
+      ]
+    },
+    {
+      "loc": "4/1/6",
+      "kind": "macro",
+      "text": "■ STOP\nREPLAY",
+      "bg": "#5a2d82",
+      "actions": [
+        {
+          "vmix": "replayStopEvents"
+        },
+        {
+          "get": "/api/deck/scoreboard/show"
+        }
+      ]
+    },
+    {
+      "loc": "4/1/7",
+      "kind": "macro",
+      "text": "🏆 TOP 8",
+      "bg": "#806200",
+      "actions": [
+        {
+          "get": "/api/deck/scoreboard/hide"
+        },
+        {
+          "vmix": "transitionMix",
+          "functionID": "Fade",
+          "duration": "1000",
+          "input": "PAUSE"
+        },
+        {
+          "wait": 1000
+        },
+        {
+          "get": "/api/deck/top8/show"
+        }
+      ]
+    },
+    {
+      "loc": "4/2/0",
+      "kind": "macro",
+      "text": "🔴 GO\nLIVE",
+      "bg": "#333333",
+      "actions": [
+        {
+          "vmix": "recordingFunctions",
+          "functionID": "StartRecording"
+        },
+        {
+          "vmix": "streamingFunctions",
+          "functionID": "StartStreaming",
+          "value": ""
+        },
+        {
+          "wait": 2000
+        },
+        {
+          "get": "/api/deck/stream-title/show"
+        }
+      ],
+      "feedbacks": [
+        {
+          "vmix": "status",
+          "status": "streaming",
+          "style": {
+            "bgcolor": "#CC0000",
+            "color": "#FFFFFF"
+          }
+        }
+      ]
+    },
+    {
+      "loc": "4/2/1",
+      "kind": "macro",
+      "text": "⏹ FIN\nLIVE",
+      "bg": "#333333",
+      "actions": [
+        {
+          "vmix": "fadeToBlack"
+        },
+        {
+          "wait": 3000
+        },
+        {
+          "vmix": "streamingFunctions",
+          "functionID": "StopStreaming",
+          "value": ""
+        },
+        {
+          "vmix": "recordingFunctions",
+          "functionID": "StopRecording"
+        }
+      ]
+    },
+    {
+      "loc": "4/2/2",
+      "kind": "macro",
+      "text": "MUTE\nMUSIQUE",
+      "bg": "#333333",
+      "actions": [
+        {
+          "vmix": "audio",
+          "input": "MUSIQUE",
+          "functionID": "Audio"
+        }
+      ],
+      "feedbacks": [
+        {
+          "vmix": "inputAudio",
+          "input": "MUSIQUE",
+          "style": {
+            "bgcolor": "#CC0000",
+            "color": "#FFFFFF"
+          }
+        }
+      ]
+    },
+    {
+      "loc": "4/2/3",
+      "kind": "macro",
+      "text": "MUTE\nMICROS",
+      "bg": "#333333",
+      "actions": [
+        {
+          "vmix": "audio",
+          "input": "MICROS",
+          "functionID": "Audio"
+        }
+      ],
+      "feedbacks": [
+        {
+          "vmix": "inputAudio",
+          "input": "MICROS",
+          "style": {
+            "bgcolor": "#CC0000",
+            "color": "#FFFFFF"
+          }
+        }
+      ]
+    },
+    {
+      "loc": "4/2/4",
+      "kind": "macro",
+      "text": "OVL 1\nOFF",
+      "bg": "#1f3a5f",
+      "actions": [
+        {
+          "vmix": "overlayFunctions",
+          "type": "Out",
+          "overlay": "1"
+        }
+      ]
+    }
+  ]
+}
