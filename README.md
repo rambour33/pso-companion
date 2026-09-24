@@ -9,6 +9,7 @@ Skills Claude Code et serveur local pour les distribuer. Le skill **companion** 
 | `skills/companion/SKILL.md` | Instructions du skill : méthode, format des specs, conventions |
 | `skills/companion/VMIX.md` | Référence des actions / feedbacks vMix (relevée dans le code du module) |
 | `skills/companion/scripts/companion.py` | Outil `init` / `dump` / `apply` |
+| `skills/companion/scripts/present.py` | Présentation HTML d'un export, touche par touche |
 | `skills/companion/examples/generique/` | Projet quelconque avec une API HTTP |
 | `skills/companion/examples/vmix/` | Pupitre vMix réutilisable |
 | `skills/companion/examples/pso/` | Exemple réel complet : régie de tournoi PSO (API maison + vMix) |
@@ -26,6 +27,7 @@ Le serveur écoute sur toutes les interfaces et affiche ses adresses au démarra
 | `http://<IP>:3011/` | Catalogue : téléchargement .zip, commande d'installation, lecture des fichiers, exports Companion |
 | `http://<IP>:3011/docs` | Documentation et tutoriel de mise en place |
 | `/download/skills/<nom>.zip` | Le skill, prêt à décompresser dans `.claude\skills` |
+| `/exports/<n>/<fichier>/presentation` | Présentation d'un export Companion : chaque page dessinée et la fonction de chaque touche, générée à la volée (bouton « Présentation » du catalogue ; nécessite Python) |
 | `/api/skills` · `/api/exports` · `/api/info` | Données JSON |
 
 `config.json` :

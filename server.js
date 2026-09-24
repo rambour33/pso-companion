@@ -6,6 +6,7 @@ const fs      = require('fs');
 const os      = require('os');
 const path    = require('path');
 const zlib    = require('zlib');
+const { execFile } = require('child_process');
 const { marked } = require('marked');
 
 const ROOT       = __dirname;
@@ -221,6 +222,21 @@ app.get('/download/exports/:dir/:name', (req, res) => {
   if (!file || !file.endsWith('.companionconfig') || !fs.existsSync(file))
     return res.status(404).send('Export introuvable');
   res.download(file);
+});
+
+// Présentation d'un export, générée à la volée par le script du skill companion (toujours à jour).
+const PRESENT_PY = path.join(SKILLS_DIR, 'companion', 'scripts', 'present.py');
+app.get('/exports/:dir/:name/presentation', (req, res) => {
+  const dir = EXPORTS_DIRS[Number(req.params.dir)];
+  const file = dir && safeJoin(dir, req.params.name);
+  if (!file || !file.endsWith('.companionconfig') || !fs.existsSync(file))
+    return res.status(404).send('Export introuvable');
+  execFile(process.env.PYTHON || 'python', [PRESENT_PY, file, '--back', '/'],
+    { encoding: 'utf8', maxBuffer: 32 * 1024 * 1024, env: { ...process.env, PYTHONIOENCODING: 'utf-8' } },
+    (err, stdout, stderr) => {
+      if (err) return res.status(500).type('text').send(`Présentation impossible : ${stderr || err.message}`);
+      res.type('html').send(stdout);
+    });
 });
 
 app.get('/docs', (req, res) => res.sendFile(path.join(ROOT, 'public', 'docs.html')));

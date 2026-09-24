@@ -186,7 +186,8 @@ async function loadExports() {
   box.innerHTML = list.length ? '' : '<p class="empty-state">Aucun export trouvé.</p>';
   list.forEach(f => box.insertAdjacentHTML('beforeend', `
     <div class="export"><div><div class="n">${esc(f.name)}</div><small>${esc(f.folder)} · ${fmtSize(f.size)} · ${fmtDate(f.mtime)}</small></div>
-    <a class="btn" href="/download/exports/${f.dir}/${encodeURIComponent(f.name)}">Télécharger</a></div>`));
+    <div class="actions"><a class="btn primary" href="/exports/${f.dir}/${encodeURIComponent(f.name)}/presentation">Présentation</a>
+    <a class="btn" href="/download/exports/${f.dir}/${encodeURIComponent(f.name)}">Télécharger</a></div></div>`));
 }
 
 loadInfo().then(loadSkills).catch(err => {

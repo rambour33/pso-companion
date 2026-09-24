@@ -22,7 +22,7 @@ description: Crée ou modifie des boutons et macros Bitfocus Companion (Stream D
 3. **Écrire la spec** dans le dossier de travail temporaire (format ci-dessous ; s'inspirer de `examples/`). Choisir des emplacements libres, ou confirmer avant d'écraser une touche existante.
 4. **Générer** dans un nouveau fichier, sans toucher à l'original :
    `python scripts/companion.py apply <config> <spec.json> --out <résultat.companionconfig> --dry-run`, puis sans `--dry-run`.
-5. **Vérifier** avec `dump`, puis expliquer l'import à l'utilisateur :
+5. **Vérifier** avec `dump`. Pour présenter le résultat à l'utilisateur (chaque page dessinée + la fonction de chaque touche, en français) : `python scripts/present.py <fichier> --out <page.html>` (option `--fps` pour convertir les images de replay en secondes). Puis expliquer l'import :
    Companion → Import / Export → importer le fichier, et **ne choisir que les pages et connexions concernées**.
 
 > ⚠️ Ne jamais conseiller un import complet avec « tout remplacer » : Companion supprime et recrée l'intégration Stream Deck pendant que le deck est ouvert, et le deck peut rester noir (`Cannot write to hid device` dans les logs) jusqu'à ce qu'on quitte Companion et qu'on débranche/rebranche le deck.
