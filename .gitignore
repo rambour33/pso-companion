@@ -3,3 +3,4 @@ __pycache__/
 *.bak
 *.companionconfig
 node_modules/
+config.local.json

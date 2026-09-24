@@ -34,6 +34,11 @@ Le serveur écoute sur toutes les interfaces et affiche ses adresses au démarra
 ```
 `exportsDirs` liste les dossiers de tes projets dont les fichiers `.companionconfig` sont proposés au téléchargement, par exemple `["D:/MonProjet/companion"]`.
 
+Les réglages propres à un PC vont dans `config.local.json` (non versionné, prioritaire sur `config.json`), par exemple :
+```json
+{ "exportsDirs": ["P:/PSO 2/PSO/companion"] }
+```
+
 Le serveur est en lecture seule, sans authentification : à réserver au réseau local. Ajouter un skill : créer `skills/<nom>/SKILL.md` avec un en-tête `name:` / `description:` ; il apparaît dans le catalogue sans redémarrer.
 
 ## Installer le skill companion

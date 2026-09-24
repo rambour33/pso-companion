@@ -10,7 +10,9 @@ const { marked } = require('marked');
 
 const ROOT       = __dirname;
 const SKILLS_DIR = path.join(ROOT, 'skills');
-const CONFIG     = JSON.parse(fs.readFileSync(path.join(ROOT, 'config.json'), 'utf8'));
+// config.json = réglages partagés (dépôt) ; config.local.json = réglages de ce PC (non versionné), prioritaires.
+const readJson   = f => fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')) : {};
+const CONFIG     = { ...readJson(path.join(ROOT, 'config.json')), ...readJson(path.join(ROOT, 'config.local.json')) };
 const PORT       = Number(process.env.PORT || CONFIG.port || 3011);
 // Dossiers de fichiers .companionconfig proposés au téléchargement (un par projet, optionnels).
 const EXPORTS_DIRS = (CONFIG.exportsDirs || []).map(d => path.resolve(d));
