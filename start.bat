@@ -16,6 +16,6 @@ if not exist "node_modules\" (
     echo Installation des dependances...
     npm install
 )
-start "" "http://localhost:3010/"
+start "" "http://localhost:3011/"
 node server.js
 pause

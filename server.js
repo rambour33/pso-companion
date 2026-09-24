@@ -11,7 +11,7 @@ const { marked } = require('marked');
 const ROOT       = __dirname;
 const SKILLS_DIR = path.join(ROOT, 'skills');
 const CONFIG     = JSON.parse(fs.readFileSync(path.join(ROOT, 'config.json'), 'utf8'));
-const PORT       = process.env.PORT || CONFIG.port || 3010;
+const PORT       = process.env.PORT || CONFIG.port || 3011;
 const EXPORTS_DIR = CONFIG.exportsDir ? path.resolve(CONFIG.exportsDir) : null;
 
 const app = express();

@@ -10,7 +10,7 @@ Skills Claude Code et serveur local pour la régie PSO : construction des bouton
 | `skills/companion/VMIX.md` | Référence des actions / feedbacks vMix (relevée dans le code du module) |
 | `skills/companion/scripts/companion.py` | Outil `dump` / `apply` pour lire et générer les boutons |
 | `skills/companion/examples/` | `spec.json` (page PSO) et `vmix-spec.json` (pages « vMix Régie » et « vMix Auto ») |
-| `server.js` · `start.bat` · `config.json` | Serveur local de skills et de documentation (port 3010) |
+| `server.js` · `start.bat` · `config.json` | Serveur local de skills et de documentation (port 3011) |
 | `public/` | Catalogue des skills (`/`) et documentation (`/docs`) |
 
 ## Serveur de skills
@@ -21,8 +21,8 @@ Le serveur écoute sur toutes les interfaces et affiche ses adresses au démarra
 
 | URL | Contenu |
 |---|---|
-| `http://<IP>:3010/` | Catalogue : téléchargement .zip, commande d'installation, lecture des fichiers, exports Companion |
-| `http://<IP>:3010/docs` | Documentation et tutoriel de mise en place |
+| `http://<IP>:3011/` | Catalogue : téléchargement .zip, commande d'installation, lecture des fichiers, exports Companion |
+| `http://<IP>:3011/docs` | Documentation et tutoriel de mise en place |
 | `/download/skills/<nom>.zip` | Le skill, prêt à décompresser dans `.claude\skills` |
 | `/api/skills` · `/api/exports` · `/api/info` | Données JSON |
 
@@ -33,7 +33,7 @@ Ajouter un skill : créer `skills/<nom>/SKILL.md` avec un en-tête `name:` / `de
 ## Installer le skill companion
 Depuis n'importe quel PC du réseau (remplacer l'IP) :
 ```powershell
-Invoke-WebRequest http://192.168.1.105:3010/download/skills/companion.zip -OutFile "$env:TEMP\companion.zip"
+Invoke-WebRequest http://192.168.1.105:3011/download/skills/companion.zip -OutFile "$env:TEMP\companion.zip"
 Expand-Archive "$env:TEMP\companion.zip" -DestinationPath "P:\PSO 2\.claude\skills" -Force
 ```
 Ou pour tous les projets : `-DestinationPath "$env:USERPROFILE\.claude\skills"`.

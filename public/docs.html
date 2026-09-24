@@ -182,7 +182,7 @@ footer{max-width:1180px;margin:64px auto 0;padding-top:20px;border-top:1px solid
     <span class="chip">module studiocoast-vmix v5.0.5</span>
     <span class="chip">serveur PSO : localhost:3002</span>
     <span class="chip">vMix TCP : 8099</span>
-    <span class="chip">serveur de skills : port 3010</span>
+    <span class="chip">serveur de skills : port 3011</span>
   </div>
 </header>
 
@@ -228,7 +228,7 @@ footer{max-width:1180px;margin:64px auto 0;padding-top:20px;border-top:1px solid
           <tr><td><code>examples/spec.json</code></td><td><code>P:\pso-companion\skills\companion</code></td><td>Exemple de page PSO : score, toggles d'overlay, bouton maître.</td></tr>
           <tr><td><code>examples/vmix-spec.json</code></td><td><code>P:\pso-companion\skills\companion</code></td><td>La description des pages <b>vMix Régie</b> et <b>vMix Auto</b>. C'est le fichier à modifier pour changer ces pages.</td></tr>
           <tr><td><code>README.md</code></td><td><code>P:\pso-companion</code></td><td>Résumé du dépôt et commandes.</td></tr>
-          <tr><td><code>server.js</code> · <code>start.bat</code></td><td><code>P:\pso-companion</code></td><td>Le serveur local de skills et de documentation (port 3010), et son lanceur.</td></tr>
+          <tr><td><code>server.js</code> · <code>start.bat</code></td><td><code>P:\pso-companion</code></td><td>Le serveur local de skills et de documentation (port 3011), et son lanceur.</td></tr>
           <tr><td><code>public/</code></td><td><code>P:\pso-companion</code></td><td>Les pages du serveur : catalogue des skills et cette documentation.</td></tr>
           <tr><td><code>config.json</code></td><td><code>P:\pso-companion</code></td><td>Port du serveur et dossier des exports Companion à proposer au téléchargement.</td></tr>
           <tr><td>Copie du skill</td><td><code>P:\PSO 2\.claude\skills\companion</code></td><td>Même contenu que le dépôt. C'est ici que Claude Code va chercher le skill quand tu travailles dans <code>P:\PSO 2</code>.</td></tr>
@@ -248,8 +248,8 @@ footer{max-width:1180px;margin:64px auto 0;padding-top:20px;border-top:1px solid
       <div class="table-wrap"><table>
         <thead><tr><th>Adresse</th><th>Contenu</th></tr></thead>
         <tbody>
-          <tr><td><code>http://&lt;IP&gt;:3010/</code></td><td>Catalogue : chaque skill avec son .zip, sa commande d'installation et la lecture de ses fichiers. Liste aussi les exports Companion à télécharger.</td></tr>
-          <tr><td><code>http://&lt;IP&gt;:3010/docs</code></td><td>Cette documentation.</td></tr>
+          <tr><td><code>http://&lt;IP&gt;:3011/</code></td><td>Catalogue : chaque skill avec son .zip, sa commande d'installation et la lecture de ses fichiers. Liste aussi les exports Companion à télécharger.</td></tr>
+          <tr><td><code>http://&lt;IP&gt;:3011/docs</code></td><td>Cette documentation.</td></tr>
           <tr><td><code>/download/skills/companion.zip</code></td><td>Le skill companion, prêt à décompresser dans <code>.claude\skills</code>.</td></tr>
           <tr><td><code>/api/skills</code></td><td>La liste des skills en JSON.</td></tr>
         </tbody>
@@ -259,11 +259,11 @@ footer{max-width:1180px;margin:64px auto 0;padding-top:20px;border-top:1px solid
       <div class="code"><pre>📦 pso-companion démarré !
 
   ── Ce PC (localhost) ──────────────────────────────────────
-   Skills     → http://localhost:3010/
-   Doc        → http://localhost:3010/docs
+   Skills     → http://localhost:3011/
+   Doc        → http://localhost:3011/docs
 
   ── Autre PC (réseau local) ────────────────────────────────
-   Skills     → http://192.168.1.x:3010/</pre></div>
+   Skills     → http://192.168.1.x:3011/</pre></div>
       <h3>Ajouter un skill</h3>
       <p>Crée un dossier dans <code>P:\pso-companion\skills\</code> avec un <code>SKILL.md</code> dont l'en-tête contient <code>name:</code> et <code>description:</code>. Il apparaît dans le catalogue au prochain rechargement de la page, sans redémarrer le serveur.</p>
       <div class="note warn">Le serveur est en lecture seule mais sans mot de passe : tout PC du réseau local peut télécharger les skills et les exports Companion. Ne le laisse pas tourner sur un réseau public.</div>
@@ -304,8 +304,8 @@ footer{max-width:1180px;margin:64px auto 0;padding-top:20px;border-top:1px solid
           <span class="step-num"></span>
           <div class="step-head"><h3>Installer le skill pour Claude</h3><label class="check"><input type="checkbox" id="s3"> Fait</label></div>
           <div class="step-body">
-            <p>Déjà fait sur ce PC. Sur un autre PC, ou après une mise à jour du skill : ouvre le catalogue <code>http://&lt;IP&gt;:3010/</code> et copie la commande d'installation du skill, ou tape directement (remplace l'IP) :</p>
-            <div class="code"><pre>Invoke-WebRequest http://192.168.1.x:3010/download/skills/companion.zip -OutFile "$env:TEMP\companion.zip"
+            <p>Déjà fait sur ce PC. Sur un autre PC, ou après une mise à jour du skill : ouvre le catalogue <code>http://&lt;IP&gt;:3011/</code> et copie la commande d'installation du skill, ou tape directement (remplace l'IP) :</p>
+            <div class="code"><pre>Invoke-WebRequest http://192.168.1.x:3011/download/skills/companion.zip -OutFile "$env:TEMP\companion.zip"
 Expand-Archive "$env:TEMP\companion.zip" -DestinationPath "P:\PSO 2\.claude\skills" -Force</pre><button class="copy" type="button">Copier</button></div>
             <p>Sur le PC qui héberge le dépôt, tu peux aussi copier le dossier directement :</p>
             <div class="code"><pre>Copy-Item P:\pso-companion\skills\companion "P:\PSO 2\.claude\skills\" -Recurse -Force</pre><button class="copy" type="button">Copier</button></div>
