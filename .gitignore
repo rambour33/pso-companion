@@ -4,3 +4,4 @@ __pycache__/
 *.companionconfig
 node_modules/
 config.local.json
+!skills/companion/examples/**/*.companionconfig
